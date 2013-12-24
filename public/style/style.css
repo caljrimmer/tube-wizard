@@ -1,0 +1,92 @@
+.clearfix:before,
+.clearfix:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+@font-face {
+font-family: Klinic;
+src: url("font/KlinicSlabMedium.otf") format("opentype");
+}
+
+@font-face {
+font-family: Klinic;
+font-weight:bold;
+src: url("font/KlinicSlabBold.otf") format("opentype");
+}
+
+@font-face {
+font-family: Klinic;
+font-style:italic;
+src: url("font/KlinicSlabMediumIt.otf") format("opentype");
+}
+
+@font-face {
+font-family: Dense;
+src: url("font/Dense-Regular.otf") format("opentype");
+}
+
+@font-face {
+font-family: Fabrica;
+src: url("font/Fabrica.otf") format("opentype");
+}
+
+@font-face {
+font-family: Nexa;
+src: url("font/NexaLight.otf") format("opentype");
+}
+
+@font-face {
+font-family: Nexa;
+font-weight:bold;
+src: url("font/NexaBold.otf") format("opentype");
+}
+
+@font-face {
+font-family: Code;
+src: url("font/CodeLight.otf") format("opentype");
+}
+
+@font-face {
+font-family: Code;
+font-weight:bold;
+src: url("font/CodeBold.otf") format("opentype");
+}
+           
+#map {
+	width:2500px;
+	height:1655px;
+	position:absolute;
+	top:0;
+	left:0;
+}
+
+/**Tube **/ 
+
+#map-viewport {
+	width:2500px;
+	height:1655px;
+	overflow:hidden;
+	position:relative;
+}
+
+#Stations {
+	font-family:Fabrica;
+	font-size:11px;
+	fill:#fff;
+}
+
+.label {
+	font-family:Fabrica;
+	font-size:11px;
+	color:#fff;
+	fill:rgba(0,0,0,0.1);
+}
+
+#Stations text:hover {
+	cursor:pointer;
+}
