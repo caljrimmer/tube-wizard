@@ -12,7 +12,8 @@ define(['jquery', 'underscore', 'backbone', 'registry', 'd3'], function($, _, Ba
 
 		var w = $(target).width(),
 			h = $(target).height(),
-			t = target[0],
+			t = target[0], 
+			duration = 10000,
 			train;
 
 		var svg = d3.select(t).append("svg")
@@ -92,6 +93,31 @@ define(['jquery', 'underscore', 'backbone', 'registry', 'd3'], function($, _, Ba
 			.style("stroke", "#1C3E93")
 			.style("fill", "none");
 			
+		_.each(Piccadily.selectAll('path')[0],function(path){
+
+			var pathLength = path.getTotalLength(); 
+			var train = svg.select('#Piccadily').append("circle")
+			    .attr({
+			    r: 8,
+			    fill: '#1C3E93',
+			    transform: function () {
+			        var p = path.getPointAtLength(0)
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			}); 
+
+			train.transition()
+			    .duration(duration)
+			    .ease("linear")
+			    .attrTween("transform", function (d, i) {
+			    return function (t) {
+			        var p = path.getPointAtLength(pathLength*t);
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			});
+
+		}); 
+			
 		//Metropolitan
 		var Metropolitan = svg.append("g")
 	      .attr("id", "Metropolitan")
@@ -110,14 +136,11 @@ define(['jquery', 'underscore', 'backbone', 'registry', 'd3'], function($, _, Ba
 			.style("stroke-width", 6)
 			.style("stroke", "#96005E")
 			.style("fill", "none"); 
-			
-		var targetPath = d3.selectAll('g'),
-		    pathNode = targetPath.selectAll('path').node(),
-		    pathLength = pathNode.getTotalLength();
 		
-		_.each(pathNode,function(path){
-			var pathLength = path.getTotalLength();
-			var train = targetPath.append("circle")
+		_.each(Metropolitan.selectAll('path')[0],function(path){
+			
+			var pathLength = path.getTotalLength(); 
+			var train = svg.select('#Metropolitan').append("circle")
 			    .attr({
 			    r: 8,
 			    fill: '#96005E',
@@ -126,22 +149,24 @@ define(['jquery', 'underscore', 'backbone', 'registry', 'd3'], function($, _, Ba
 			        return "translate(" + [p.x, p.y] + ")";
 			    }
 			}); 
+
+			train.transition()
+			    .duration(duration)
+			    .ease("linear")
+			    .attrTween("transform", function (d, i) {
+			    return function (t) {
+			        var p = path.getPointAtLength(pathLength*t);
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			});
+			
 		});
 
 		
 
 		// Animate the circle:
 
-		duration = 10000;
-		train.transition()
-		    .duration(duration)
-		    .ease("linear")
-		    .attrTween("transform", function (d, i) {
-		    return function (t) {
-		        var p = pathNode.getPointAtLength(pathLength*t);
-		        return "translate(" + [p.x, p.y] + ")";
-		    }
-		});   
+		  
 			
 		//Bakerloo
 		var Bakerloo = svg.append("g")
@@ -153,6 +178,31 @@ define(['jquery', 'underscore', 'backbone', 'registry', 'd3'], function($, _, Ba
 			.style("stroke-width", 6)
 			.style("stroke", "#AF6010")
 			.style("fill", "none");
+			
+		_.each(Bakerloo.selectAll('path')[0],function(path){
+
+			var pathLength = path.getTotalLength(); 
+			var train = svg.select('#Bakerloo').append("circle")
+			    .attr({
+			    r: 8,
+			    fill: '#AF6010',
+			    transform: function () {
+			        var p = path.getPointAtLength(0)
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			}); 
+
+			train.transition()
+			    .duration(duration)
+			    .ease("linear")
+			    .attrTween("transform", function (d, i) {
+			    return function (t) {
+			        var p = path.getPointAtLength(pathLength*t);
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			});
+
+		}); 
 			
 		//Northern
 		
@@ -177,6 +227,31 @@ define(['jquery', 'underscore', 'backbone', 'registry', 'd3'], function($, _, Ba
 			.style("stroke-width", 6)
 			.style("stroke", "#231F20")
 			.style("fill", "none");
+
+		_.each(Northern.selectAll('path')[0],function(path){
+
+			var pathLength = path.getTotalLength(); 
+			var train = svg.select('#Northern').append("circle")
+			    .attr({
+			    r: 8,
+			    fill: '#231F20',
+			    transform: function () {
+			        var p = path.getPointAtLength(0)
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			}); 
+
+			train.transition()
+			    .duration(duration)
+			    .ease("linear")
+			    .attrTween("transform", function (d, i) {
+			    return function (t) {
+			        var p = path.getPointAtLength(pathLength*t);
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			});
+
+		});  
 		
 		//Circle
 		
@@ -189,6 +264,31 @@ define(['jquery', 'underscore', 'backbone', 'registry', 'd3'], function($, _, Ba
 			.style("stroke-width", 6)
 			.style("stroke", "#FFD200")
 			.style("fill", "none");
+
+		_.each(Circle.selectAll('path')[0],function(path){
+
+			var pathLength = path.getTotalLength(); 
+			var train = svg.select('#Circle').append("circle")
+			    .attr({
+			    r: 8,
+			    fill: '#FFD200',
+			    transform: function () {
+			        var p = path.getPointAtLength(0)
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			}); 
+
+			train.transition()
+			    .duration(duration)
+			    .ease("linear")
+			    .attrTween("transform", function (d, i) {
+			    return function (t) {
+			        var p = path.getPointAtLength(pathLength*t);
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			});
+
+		});   
 			
 		//District
 		
@@ -213,6 +313,32 @@ define(['jquery', 'underscore', 'backbone', 'registry', 'd3'], function($, _, Ba
 			.style("stroke-width", 6)
 			.style("stroke", "#00843F")
 			.style("fill", "none");
+
+		_.each(District.selectAll('path')[0],function(path){
+
+			var pathLength = path.getTotalLength(); 
+			var train = svg.select('#District').append("circle")
+			    .attr({
+			    r: 8,
+			    fill: '#00843F',
+			    transform: function () {
+			        var p = path.getPointAtLength(0)
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			}); 
+
+			train.transition()
+			    .duration(duration)
+			    .ease("linear")
+			    .attrTween("transform", function (d, i) {
+			    return function (t) {
+			        var p = path.getPointAtLength(pathLength*t);
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			});
+
+		});   
+
 			
 		//Hammersmith
 		
@@ -225,6 +351,31 @@ define(['jquery', 'underscore', 'backbone', 'registry', 'd3'], function($, _, Ba
 			.style("stroke-width", 6)
 			.style("stroke", "#F285A0")
 			.style("fill", "none");
+        
+		_.each(Hammersmith.selectAll('path')[0],function(path){
+
+			var pathLength = path.getTotalLength(); 
+			var train = svg.select('#Hammersmith').append("circle")
+			    .attr({
+			    r: 8,
+			    fill: '#F285A0',
+			    transform: function () {
+			        var p = path.getPointAtLength(0)
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			}); 
+
+			train.transition()
+			    .duration(duration)
+			    .ease("linear")
+			    .attrTween("transform", function (d, i) {
+			    return function (t) {
+			        var p = path.getPointAtLength(pathLength*t);
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			});
+
+		}); 
 
 		//DLR
 		
@@ -242,7 +393,32 @@ define(['jquery', 'underscore', 'backbone', 'registry', 'd3'], function($, _, Ba
 			.attr("d", paths.DLR[1].d)
 			.style("stroke-width", 6)
 			.style("stroke", "#00A99D")
-			.style("fill", "none"); 
+			.style("fill", "none");
+			
+		_.each(DLR.selectAll('path')[0],function(path){
+
+			var pathLength = path.getTotalLength(); 
+			var train = svg.select('#DLR').append("circle")
+			    .attr({
+			    r: 8,
+			    fill: '#00A99D',
+			    transform: function () {
+			        var p = path.getPointAtLength(0)
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			}); 
+
+			train.transition()
+			    .duration(duration)
+			    .ease("linear")
+			    .attrTween("transform", function (d, i) {
+			    return function (t) {
+			        var p = path.getPointAtLength(pathLength*t);
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			});
+
+		}); 
 
 		//Central
 		
@@ -261,6 +437,31 @@ define(['jquery', 'underscore', 'backbone', 'registry', 'd3'], function($, _, Ba
 			.style("stroke-width", 6)
 			.style("stroke", "#ED3024")
 			.style("fill", "none");  
+
+		_.each(Central.selectAll('path')[0],function(path){
+
+			var pathLength = path.getTotalLength(); 
+			var train = svg.select('#Central').append("circle")
+			    .attr({
+			    r: 8,
+			    fill: '#ED3024',
+			    transform: function () {
+			        var p = path.getPointAtLength(0)
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			}); 
+
+			train.transition()
+			    .duration(duration)
+			    .ease("linear")
+			    .attrTween("transform", function (d, i) {
+			    return function (t) {
+			        var p = path.getPointAtLength(pathLength*t);
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			});
+
+		});   
 
 		//Overground
 		
@@ -290,7 +491,32 @@ define(['jquery', 'underscore', 'backbone', 'registry', 'd3'], function($, _, Ba
 			.attr("d", paths.EL[3].d)
 			.style("stroke-width", 6)
 			.style("stroke", "#F7931E")
-			.style("fill", "none"); 
+			.style("fill", "none");
+			
+		_.each(EL.selectAll('path')[0],function(path){
+
+			var pathLength = path.getTotalLength(); 
+			var train = svg.select('#EL').append("circle")
+			    .attr({
+			    r: 8,
+			    fill: '#F7931E',
+			    transform: function () {
+			        var p = path.getPointAtLength(0)
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			}); 
+
+			train.transition()
+			    .duration(duration)
+			    .ease("linear")
+			    .attrTween("transform", function (d, i) {
+			    return function (t) {
+			        var p = path.getPointAtLength(pathLength*t);
+			        return "translate(" + [p.x, p.y] + ")";
+			    }
+			});
+
+		});  
 		
 		var assetOverlay = 	svg.append("image")
 			.attr("xlink:href", "images/map.png")
@@ -690,10 +916,6 @@ define(['jquery', 'underscore', 'backbone', 'registry', 'd3'], function($, _, Ba
 					//Highlight Station
 					$('.label').css({'fill':'rgba(0,0,0,0.1)'}); 
 					$('#'+k.replace("'","").split(' ')[0] + v.x.toString().split('.')[0]).css({'fill':'rgba(0,0,0,1)'});
-					$('#map').css({
-						top : -v.x  + 86 + 140,
-						left : -v.y + 72 + 160
-					});
 				});
 				
 		});

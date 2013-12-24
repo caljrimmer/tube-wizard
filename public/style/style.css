@@ -61,17 +61,20 @@ src: url("font/CodeBold.otf") format("opentype");
 	width:2500px;
 	height:1655px;
 	position:absolute;
-	top:0;
-	left:0;
+	top:-700px;
+	left:-1000px;
 }
 
 /**Tube **/ 
 
 #map-viewport {
-	width:2500px;
-	height:1655px;
+	width:400px;
+	height:300px;
 	overflow:hidden;
 	position:relative;
+	box-shadow:2px 2px 3px #ccc;
+	border:1px solid #eaeaea;
+	margin:20px auto 20px;
 }
 
 #Stations {

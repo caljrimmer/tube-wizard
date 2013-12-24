@@ -60,7 +60,7 @@ app.get('/api/station/:line/:station', function(req, res){
 	};
     
 	var request = require('request');
-	request('http://cloud.tfl.gov.uk/TrackerNet/PredictionDetailed/c/bnk', function (error, response, body) {
+	request('http://cloud.tfl.gov.uk/TrackerNet/PredictionDetailed/'+req.params.line+'/'+req.params.station, function (error, response, body) {
 		if (!error && response.statusCode == 200) {
 			parseString(body, function (err, result) {
 				obj.info = result.ROOT.S[0].$;
