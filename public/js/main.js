@@ -5,12 +5,16 @@ require.config({
         'backbone' : 'vendor/backbone-1.1.0.min',
 		'text' : 'vendor/text',
 		'd3' : 'vendor/d3',
+		'countdown' : 'vendor/countdown',
 		'charts' : 'custom/charts',
 		'registry' : 'custom/registry'
     },
 	shim: {
 		d3: {
 			exports: 'd3'
+		},
+		countdown : {
+			exports : 'Countdown'
 		},
 		underscore: {
 			exports: '_'

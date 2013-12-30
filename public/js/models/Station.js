@@ -6,8 +6,7 @@ define([
 ], function($, _, Backbone, registry){
 		
 	var Station = Backbone.Model.extend({
-		urlRoot : 'http://localhost:4001/api/station/c/bnk',
-		idAttribute: "_id"
+		urlRoot : 'http://localhost:4001/api/station/'
 		
 	});
 

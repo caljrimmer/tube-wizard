@@ -36,7 +36,7 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/api/station/:line/:station', function(req, res){
+app.get('/api/station/:code', function(req, res){
 	
 	var parseString = xml2js.parseString,
 		obj = {};
@@ -58,11 +58,15 @@ app.get('/api/station/:line/:station', function(req, res){
 		});
 		return newArr;
 	};
+	                      
+	//Force Central Line
+	req.params.line = "b";
     
 	var request = require('request');
-	request('http://cloud.tfl.gov.uk/TrackerNet/PredictionDetailed/'+req.params.line+'/'+req.params.station, function (error, response, body) {
+	request('http://cloud.tfl.gov.uk/TrackerNet/PredictionDetailed/'+req.params.line+'/'+req.params.code, function (error, response, body) {
 		if (!error && response.statusCode == 200) {
 			parseString(body, function (err, result) {
+				obj.id = result.ROOT.S[0].$.Code;
 				obj.info = result.ROOT.S[0].$;
 				obj.info.line = result.ROOT.Line[0]
 				obj.info.lineName = result.ROOT.LineName[0]
@@ -72,6 +76,8 @@ app.get('/api/station/:line/:station', function(req, res){
 				res.writeHead(200, { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(obj, 'utf8')});
 				res.end(obj);     
 			});
+		}else{
+			console.log(error)
 		} 
 	})     
 
