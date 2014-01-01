@@ -17,29 +17,29 @@ define([
 		},
 		
 		render : function(types){
-			$(this.el).html(this.template(this.model.toJSON()));
+			$(this.el).html(this.template());
 		},
 		
 		renderRows : function(){       
 			var container = $(this.el),
-				line = this.model.get('info').line;
-			container.find('ul ul li').not('.header').remove();
-			_.each(this.model.toJSON(),function(v,k){
-				var count = 0;
-				if(!(k === 'info' || k === "id")){
-					_.each(v,function(v2,k2){  
-						var drilled = container.find('#'+k);
-						v2.line = line;
-						v2.index = count + 1;
-						var view = new TableRowView({
-							model : v2
-						});
-						drilled.find('ul').append(view.render().el);   
-						drilled.show();                             
-						drilled.find('.header').show(); 
-						++count;
+				line = this.model.get('info').line,
+				trains = this.model.toJSON().trains,
+				count = 0;
+				
+			container.find('ul.tube-lines').empty();
+			trains = _.groupBy(trains, 'Direction');
+			
+			_.each(trains,function(v,k){
+				container.find('ul.tube-lines').append('<li class="header">'+k+'</li>');
+				_.each(v,function(v2,k2){
+					v2.line = line;
+					v2.index = count + 1;
+					var view = new TableRowView({
+						model : v2
 					});
-				}
+					container.find('ul.tube-lines').append(view.render().el);
+					++count;
+				});
 			});
 		}
 		  

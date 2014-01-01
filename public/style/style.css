@@ -58,11 +58,11 @@ src: url("font/CodeBold.otf") format("opentype");
 }
 
 #canvas {
+	width:400px; 
 	/*
 	width:2500px;
 	height:1655px;
 	*/
-	width:400px;
 	margin:auto;
 }
            
@@ -144,6 +144,17 @@ src: url("font/CodeBold.otf") format("opentype");
 	cursor:pointer;
 }
 
+.tube-number {
+	font-family:Fabrica;
+	font-size:11px;
+	fill:#fff;
+	font-weight:bold;
+}
+
+.lines {
+	opacity:0.3;
+}
+
 /**List **/
 
 #table {
@@ -151,11 +162,7 @@ src: url("font/CodeBold.otf") format("opentype");
 	margin:20px auto 20px;
 }
 
-.tube-lines .header {
-	display:none;
-}
-
-.tube-lines ul {
+.tube-lines{
 	margin:0;
 	padding:0;
 	width:100%;
@@ -171,7 +178,7 @@ src: url("font/CodeBold.otf") format("opentype");
 	padding:3px;
 }
 
-.tube-lines li.clearfix:nth-child(even){
+.tube-lines li:nth-child(even){
 	background:#eaeaea;
 }
 
@@ -179,6 +186,10 @@ src: url("font/CodeBold.otf") format("opentype");
 	font-size:18px;
 	font-weight:bold;
 	line-height:30px;
+	background:#fff;
+	margin:2px 0 2px 0;
+	border-top:1px dotted #ccc;
+	border-bottom:1px dotted #ccc; 
 } 
 
 .tube-lines li .radial {

@@ -19,8 +19,7 @@ define([
 			h = $(target).height(),
 			t = target[0],
 			paths = linesData,
-			stationsMap = stationsData,  
-			duration = 10000;
+			stationsMap = stationsData;
 
 		var svg = d3.select(t).append("svg")
 			.attr("width", w)
@@ -35,6 +34,7 @@ define([
 				
 				var Line = svg.append("g")
 			      .attr("id", k)
+			      .attr("class","lines")
 				  .attr("transform","translate("+ v.x +","+ v.y +")");
 
 				_.each(v.data,function(path){
@@ -42,7 +42,7 @@ define([
 						.attr("d", path.d)
 						.attr("class",v.class + "_line");
 				});
-				
+
 			});
 			  
 		}();
@@ -64,7 +64,8 @@ define([
 						.attr("r", 8)
 						.style("fill",'#fff')
 						.style("stroke",'#000')
-						.style("stroke-width",3); 
+						.style("stroke-width",3)
+						.style("opacity",0.6); 
 						
 					StationsMap.append("rect")
 						.attr('class','label')
@@ -154,37 +155,140 @@ define([
 
 	}
 	
-	Tube.prototype.trains = function(data){
+	Tube.prototype.parseVerbose = function(stationsData,trainData){
+		var atStation = false,
+			location = trainData.Location.replace("'",""),
+			where = [];   
 		
-		console.log(data)        
-		
-		var Line = this.svg.select('#Bakerloo')
-
-		_.each(Line.selectAll('path')[0],function(path){
-
-			var pathLength = path.getTotalLength(); 
-			var train = Line.append("circle")
-			    .attr({
-			    r: 8,
-			    class : 'B',
-			    transform: function () {
-			        var p = path.getPointAtLength(0)
-					console.log(p)
-			        return "translate(" + [p.x, p.y] + ")";
-			    }
-			}); 
-
-			train.transition()
-			    .duration(10000)
-			    .ease("linear")
-			    .attrTween("transform", function (d, i) {
-			    return function (t) {
-			        var p = path.getPointAtLength(pathLength*t);
-			        return "translate(" + [p.x, p.y] + ")";
-			    }
-			});
-
+		//Find mentioned stations from API (two with Between hence the Array)
+		_.each(stationsData.Bakerloo,function(v,k){
+			if(location.indexOf(v.name) !== -1){
+				if(location.indexOf('Platform')) atStation = true;
+				v.atStation = atStation
+				where.push(v);
+			}
 		});
+		
+		if(!where.length) {
+			console.log(location);  
+			return null;
+		}
+		
+		return where[0].atLength;
+		
+		if(!isAt){
+			if(trainData.Direction === 'Eastbound' || trainData.Direction === 'Southbound'){
+				return Math.floor((where[0].atLength - where[1].atLength)/2);
+			}else{
+				return Math.floor((where[1].atLength - where[0].atLength)/2);
+			}
+		}else{
+			return where[0].atLength;
+		}
+		
+	}
+	
+	Tube.prototype.trains = function(data){
+		var that = this,
+			Line = this.svg.select('#Bakerloo');
+		
+		Line.style('opacity',1)
+		
+		//Removes the old trains	
+		Line.selectAll('circle').remove();
+		Line.selectAll('text').remove();
+		
+		_.each(data.trains,function(v,k){
+			var startLength = that.parseVerbose(stationsData,v),
+				stopLength = _.findWhere(stationsData.Bakerloo,{code:data.id}).atLength,
+				direction = v.Direction;
+
+			if(startLength){            
+				
+				_.each(Line.selectAll('path')[0],function(path){
+					
+					//Look at journey length against the total path distance.
+					var duration = Math.ceil((path.getTotalLength()/Math.abs(startLength - stopLength)) * parseInt(v.SecondsTo,10) * 1000);
+					   
+					var pathLength = path.getTotalLength(); 
+					var train = Line.append("circle")
+					    .attr({
+						    r: 10,
+						    class : 'B',
+						    transform: function () {
+						        var p = path.getPointAtLength(startLength)
+						        return "translate(" + [p.x, p.y] + ")";
+						    }  
+						})
+						.style('stroke','#fff')
+						.style('stroke-width',2)
+					
+					var trainNumber = Line.append("text")
+						.attr("dy",".35em")
+						.attr("text-anchor","middle")
+						.attr('class', 'tube-number')  
+						.text(v.index);
+					
+					if(!v.atStation){
+					 
+						train.transition()
+						    .duration(duration)
+						    .ease("linear")
+						    .attrTween("transform", function (d, i) {
+						    return function (t) {
+								if(direction === "Southbound"){
+									var length = startLength - (startLength*t);
+									if(stopLength < length){
+							        	var p = path.getPointAtLength(length);
+										return "translate(" + [p.x, p.y] + ")"; 
+									}else{
+										train.remove();
+									}
+								}else{
+									var length = ((pathLength-startLength)*t) + startLength;
+									if(stopLength > length){
+							        	var p = path.getPointAtLength(length);
+										return "translate(" + [p.x, p.y] + ")"; 
+									}else{
+										train.remove();
+									}
+
+								}
+						    }
+						});
+					
+						trainNumber.transition()
+						    .duration(duration)
+						    .ease("linear")
+						    .attrTween("transform", function (d, i) {
+						    return function (t) {
+								if(direction === "Southbound"){
+									var length = startLength - (startLength * t);
+									if(stopLength < length){
+							        	var p = path.getPointAtLength(length);
+										return "translate(" + [p.x, p.y] + ")"; 
+									}else{
+										train.remove();
+									}
+								}else{
+									var length = ((pathLength-startLength)*t) + startLength;
+									if(stopLength > length){
+							        	var p = path.getPointAtLength(length);
+										return "translate(" + [p.x, p.y] + ")"; 
+									}else{
+										train.remove();
+									}
+
+								}
+						    }
+						});
+                    
+					}
+
+				});   
+				
+			}  
+		});        
 
 	}
 

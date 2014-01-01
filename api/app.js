@@ -47,14 +47,17 @@ app.get('/api/station/:code', function(req, res){
 	var filter = function(data){
 		var newArr = [];
 		_.each(data,function(v,k){
-			var newData = {
-				SecondsTo: v.$.SecondsTo,
-				TimeTo: v.$.TimeTo,
-				Location: v.$.Location,
-				Destination: v.$.Destination,
-				DepartTime: v.$.DepartTime,
-			};
-			newArr.push(newData);
+			_.each(v.T,function(v2,k2){
+				var newData = {
+					Direction : v.$.N.split('-')[0].replace(' ',''),
+					SecondsTo: v2.$.SecondsTo,
+					TimeTo: v2.$.TimeTo,
+					Location: v2.$.Location,
+					Destination: v2.$.Destination,
+					DepartTime: v2.$.DepartTime,
+				};
+				newArr.push(newData);	
+			});
 		});
 		return newArr;
 	};
@@ -68,10 +71,9 @@ app.get('/api/station/:code', function(req, res){
 			parseString(body, function (err, result) {
 				obj.id = result.ROOT.S[0].$.Code;
 				obj.info = result.ROOT.S[0].$;
-				obj.info.line = result.ROOT.Line[0]
-				obj.info.lineName = result.ROOT.LineName[0]
-			    obj.westBound = filter(result.ROOT.S[0].P[0].T);
-				obj.eastBound = filter(result.ROOT.S[0].P[1].T); 
+				obj.info.line = result.ROOT.Line[0];
+				obj.info.lineName = result.ROOT.LineName[0];
+				obj.trains = filter(result.ROOT.S[0].P);
 				obj = JSON.stringify(obj);
 				res.writeHead(200, { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(obj, 'utf8')});
 				res.end(obj);     

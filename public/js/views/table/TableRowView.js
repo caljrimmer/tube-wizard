@@ -19,7 +19,8 @@ define([
 			this.charts = new Charts(); 
 		},
 		
-		render : function(){                 
+		render : function(){
+                
 			var template = $(this.template(this.model)),
 				that = this;
 			
