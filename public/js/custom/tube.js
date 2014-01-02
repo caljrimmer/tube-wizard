@@ -199,95 +199,96 @@ define([
 		Line.selectAll('text').remove();
 		
 		_.each(data.trains,function(v,k){
-			var startLength = that.parseVerbose(stationsData,v),
-				stopLength = _.findWhere(stationsData.Bakerloo,{code:data.id}).atLength,
-				direction = v.Direction;
+			
+				var startLength = that.parseVerbose(stationsData,v),
+					stopLength = _.findWhere(stationsData.Bakerloo,{code:data.id}).atLength,
+					direction = v.Direction;
 
-			if(startLength){            
+				if(startLength){            
 				
-				_.each(Line.selectAll('path')[0],function(path){
+					_.each(Line.selectAll('path')[0],function(path){
 					
-					//Look at journey length against the total path distance.
-					var duration = Math.ceil((path.getTotalLength()/Math.abs(startLength - stopLength)) * parseInt(v.SecondsTo,10) * 1000);
+						//Look at journey length against the total path distance.
+						var duration = Math.ceil((path.getTotalLength()/Math.abs(startLength - stopLength)) * parseInt(v.SecondsTo,10) * 1000);
 					   
-					var pathLength = path.getTotalLength(); 
-					var train = Line.append("circle")
-					    .attr({
-						    r: 10,
-						    class : 'B',
-						    transform: function () {
-						        var p = path.getPointAtLength(startLength)
-						        return "translate(" + [p.x, p.y] + ")";
-						    }  
-						})
-						.style('stroke','#fff')
-						.style('stroke-width',2)
+						var pathLength = path.getTotalLength(); 
+						var train = Line.append("circle")
+						    .attr({
+							    r: 10,
+							    class : 'B',
+							    transform: function () {
+							        var p = path.getPointAtLength(startLength)
+							        return "translate(" + [p.x, p.y] + ")";
+							    }  
+							})
+							.style('stroke','#fff')
+							.style('stroke-width',2)
 					
-					var trainNumber = Line.append("text")
-						.attr("dy",".35em")
-						.attr("text-anchor","middle")
-						.attr('class', 'tube-number')  
-						.text(v.index);
-					
-					if(!v.atStation){
-					 
-						train.transition()
-						    .duration(duration)
-						    .ease("linear")
-						    .attrTween("transform", function (d, i) {
-						    return function (t) {
-								if(direction === "Southbound"){
-									var length = startLength - (startLength*t);
-									if(stopLength < length){
-							        	var p = path.getPointAtLength(length);
-										return "translate(" + [p.x, p.y] + ")"; 
+						var trainNumber = Line.append("text")
+							.attr("dy",".35em")
+							.attr("text-anchor","middle")
+							.attr('class', 'tube-number')  
+							.text(v.index);
+					    
+						if(parseInt(v.SecondsTo,10) < 301){ 
+							train.transition()
+							    .duration(duration)
+							    .ease("linear")
+							    .attrTween("transform", function (d, i) {
+							    return function (t) {
+									if(direction === "Southbound"){
+										var length = startLength - (startLength*t);
+										if(stopLength < length){
+								        	var p = path.getPointAtLength(length);
+											return "translate(" + [p.x, p.y] + ")"; 
+										}else{
+											train.remove();
+										}
 									}else{
-										train.remove();
-									}
-								}else{
-									var length = ((pathLength-startLength)*t) + startLength;
-									if(stopLength > length){
-							        	var p = path.getPointAtLength(length);
-										return "translate(" + [p.x, p.y] + ")"; 
-									}else{
-										train.remove();
-									}
+										var length = ((pathLength-startLength)*t) + startLength;
+										if(stopLength > length){
+								        	var p = path.getPointAtLength(length);
+											return "translate(" + [p.x, p.y] + ")"; 
+										}else{
+											train.remove();
+										}
 
-								}
-						    }
-						});
-					
-						trainNumber.transition()
-						    .duration(duration)
-						    .ease("linear")
-						    .attrTween("transform", function (d, i) {
-						    return function (t) {
-								if(direction === "Southbound"){
-									var length = startLength - (startLength * t);
-									if(stopLength < length){
-							        	var p = path.getPointAtLength(length);
-										return "translate(" + [p.x, p.y] + ")"; 
-									}else{
-										train.remove();
 									}
-								}else{
-									var length = ((pathLength-startLength)*t) + startLength;
-									if(stopLength > length){
-							        	var p = path.getPointAtLength(length);
-										return "translate(" + [p.x, p.y] + ")"; 
-									}else{
-										train.remove();
-									}
-
-								}
-						    }
-						});
-                    
-					}
-
-				});   
+							    }
+							});
 				
-			}  
+							trainNumber.transition()
+							    .duration(duration)
+							    .ease("linear")
+							    .attrTween("transform", function (d, i) {
+							    return function (t) {
+									if(direction === "Southbound"){
+										var length = startLength - (startLength * t);
+										if(stopLength < length){
+								        	var p = path.getPointAtLength(length);
+											return "translate(" + [p.x, p.y] + ")"; 
+										}else{
+											train.remove();
+										}
+									}else{
+										var length = ((pathLength-startLength)*t) + startLength;
+										if(stopLength > length){
+								        	var p = path.getPointAtLength(length);
+											return "translate(" + [p.x, p.y] + ")"; 
+										}else{
+											train.remove();
+										}
+
+									}
+							    }
+							});    
+						
+						}  
+
+					});   
+				
+				}    
+
 		});        
 
 	}
