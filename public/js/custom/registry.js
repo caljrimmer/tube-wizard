@@ -4,6 +4,12 @@ define(['underscore','backbone'], function(_,Backbone) {
 		models : {},
 		collections : {},
 		views : {},
+		zombieKiller : function(){
+			$.each(this.views,function(k,v){
+				v.dispose();
+			});
+			this.views = {};
+		},
 		events : _.extend({},Backbone.Events) 
 	};
 

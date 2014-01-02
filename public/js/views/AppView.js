@@ -5,12 +5,13 @@ define([
   'custom/tube',
   'custom/stationsData',	
   'models/Station',
+  'views/BaseView',
   'views/table/TableView',
   'views/SearchView',
   'views/TubeView' 
-], function($, _, Backbone, Tube, stationsData, Station, TableView, SearchView, TubeView){
+], function($, _, Backbone, Tube, stationsData, Station, BaseView, TableView, SearchView, TubeView){
 	
-    var AppView = Backbone.View.extend({
+    var AppView = BaseView.extend({
 	
 		el : $('#canvas'),
 		

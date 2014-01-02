@@ -23,13 +23,15 @@ define([
 		},
 		
 		renderMapShift : function(model){
-			var state  = model.toJSON(); 
-			$(this.el).find('#map').animate({
-				left: - state.position.x + ($(this.el).width()/2),
-				top: - state.position.y + ($(this.el).height()/2)
-			},500);
-			d3.selectAll('.labelOn').attr('class','label');
-			d3.selectAll('#'+this.state.get('code')).attr('class','labelOn');
+			var state  = model.toJSON();
+			if(_.has(state,'position')){ 
+				$(this.el).find('#map').animate({
+					left: - state.position.x + ($(this.el).width()/2),
+					top: - state.position.y + ($(this.el).height()/2)
+				},500);
+				d3.selectAll('.labelOn').attr('class','label');
+				d3.selectAll('#'+this.state.get('code')).attr('class','labelOn');  
+			}
 		},
 		
 		controllerTrains : function(model){
