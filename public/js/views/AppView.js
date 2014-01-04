@@ -24,7 +24,13 @@ define([
 				this.state.set({line:'V'});
 			}
 			this.state.bind('change',this.controllerNewSelect,this); 
-			this.controllerModelFetchInterval(this.state)
+			this.controllerModelFetchInterval(this.state);
+			
+			//Mobile Error show
+			window.onerror = function(message, url, linenumber) {
+			  alert("JavaScript error: " + message + " on line " + linenumber + " for " + url);
+			}
+			
 		},
 		
 		render : function(types){
