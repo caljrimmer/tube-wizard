@@ -25,6 +25,7 @@ define([
 		},
 		
 		eventSearchSelect : function(e){
+			console.log(this.model.toJSON())
 			this.state.set(this.model.toJSON());
 		}
 		  

@@ -9,7 +9,9 @@ define([
 	], 
 	function($, _, Backbone, Registry, d3, linesData, stationsData) {
 
-	function Tube() {}
+	function Tube() {
+		this.trainArray = [];
+	}
 
 	Tube.prototype.map = function(target) {
 
@@ -152,15 +154,21 @@ define([
 			});
 		});
 		
-		/*
+        /*
 		var assetOverlay = svg.append("image")
 			.attr("xlink:href", "images/map.png")
 			.attr("width", 2422)
 			.attr("height", 1620)
 			.attr("transform","translate(38,22)");   
-		*/
+        
+
+		this.svg.on('click',function(){
+			console.log(d3.mouse(this));
+		}); 
 		
-		// Visual SVG all Lines. Not the routes just the aesthetics.
+		*/ 
+		
+		// Tracking of Trains SVG all Lines. Inivisble to user.
 		var allPathLines = function(){
 
 			_.each(paths,function(v,k){
@@ -189,12 +197,12 @@ define([
 			length,
 			positionAdjust;   
 		
-		_.each(stationsData.Bakerloo,function(v,k){
+		_.each(stationsData,function(v,k){
 			if(location.indexOf(v.name) !== -1){
 				
 				v.positionAdjust = 0;
 				
-				if(location.indexOf('Platform') !== -1){
+				if(location.indexOf('At ') !== -1){
 					v.positionAdjust = -1;
 				}
 				/*
@@ -244,33 +252,52 @@ define([
 	}
 	
 	Tube.prototype.trains = function(data){
-		var that = this,
-			Line = this.svg.select('#Bakerloo-path'),
-			LineVisual = this.svg.select('#Bakerloo')
 		
-		LineVisual.style('opacity',1);
+		var testLine = data.info.lineName.split(' ')[0];
+		
+		var that = this,
+			Line = this.svg.select('#'+testLine+'-path');
 		
 		//Removes the old trains	
-		Line.selectAll('circle').remove();
-		Line.selectAll('text').remove();
+		d3.selectAll('.lines-path circle').remove();
+		d3.selectAll('.lines-path text').remove();
+		
+		/**
+		*
+		*Find the Lengths
+		*
+		var trainBlob = Line.append("circle")
+		    .attr({
+			    r: 10,
+			    class : 'B',
+			    transform: function () {
+			        var p = Line.selectAll('path')[0][0].getPointAtLength(76)
+			        return "translate(" + [p.x, p.y] + ")";
+			    }  
+			})
+			.style('stroke','#fff')
+			.style('stroke-width',2);
+		
+		console.log(Line.selectAll('path')[0][0].getTotalLength())
+		*/
 		
 		_.each(data.trains,function(v,k){
 			
-				var startLength = that.parseVerbose(stationsData,v),
-					stopLength = _.findWhere(stationsData.Bakerloo,{code:data.id}).atLength,
+				var startLength = that.parseVerbose(stationsData[testLine],v),
+					stopLength = _.findWhere(stationsData[testLine],{code:data.id}).atLength,
 					direction = v.Direction;
 				
 				v.SecondsTo = parseInt(v.SecondsTo,10);
 				v.SecondsToCount = 0;
 
-				if(startLength){            
+				if(startLength && v.SecondsTo < 300){            
 				
 					_.each(Line.selectAll('path')[0],function(path){
 					
 						var train = Line.append("circle")
 						    .attr({
 							    r: 10,
-							    class : 'B',
+							    class : testLine.charAt(0),
 							    transform: function () {
 							        var p = path.getPointAtLength(startLength)
 							        return "translate(" + [p.x, p.y] + ")";

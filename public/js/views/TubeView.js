@@ -34,7 +34,7 @@ define([
 			}
 		},
 		
-		controllerTrains : function(model){
+		controllerTrains : function(model){ 
 			this.tube.trains(model.toJSON());
 		}
 		  

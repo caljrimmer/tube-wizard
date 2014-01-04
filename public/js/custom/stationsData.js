@@ -27,6 +27,24 @@ define([], function() {
 			{ code : 'WLO' , name : 'Waterloo', atLength : 200 ,position : { x : 1276, y : 1084, type: 'circle'}},
 			{ code : 'WEM' , name : 'Wembley Central', atLength : 1256 ,position : { x : 696, y : 414, type: 'circle'}},
 			{ code : 'WJN' , name : 'Willesden Junction', atLength : 1162 ,position : { x : 696, y : 507, type: 'circle'}}  
+		],
+		Victoria : [
+			{ code : 'BHR' , name : 'Blackhorse Road', atLength : 1676 ,position : { x : 1862, y : 363, type: 'circle'}},
+			{ code : 'BRX' , name : 'Brixton', atLength : 1 ,position : { x : 1255, y : 1411, type: 'circle'}},
+			{ code : 'EUS' , name : 'Euston', atLength : 944 ,position : { x : 1316, y : 638, type: 'circle'}},
+			{ code : 'FPK' , name : 'Finsbury Park', atLength : 1458 ,position : { x : 1656, y : 396, type: 'circle'}},
+			{ code : 'GPK' , name : 'Green Park', atLength : 588 ,position : { x : 1079, y : 898, type: 'circle'}},
+			{ code : 'HBY' , name : 'Highbury & Islington', atLength : 1308 ,position : { x : 1608, y : 527, type: 'circle'}},
+			{ code : 'KXX' , name : 'Kings Cross St. P', atLength : 1024 ,position : { x : 1393, y : 627, type: 'circle'}},
+			{ code : 'OXC' , name : 'Oxford Circus', atLength : 694 ,position : { x : 1139, y : 815, type: 'circle'}},
+			{ code : 'PIM' , name : 'Pimlico', atLength : 342 ,position : { x : 1078, y : 1142, type : 'rect', attr : { rotate : 0, offset : { x : -8, y : 0}}}},
+			{ code : 'SVS' , name : 'Seven Sisters', atLength : 1566 ,position : { x : 1752, y : 363, type: 'circle'}},
+			{ code : 'STK' , name : 'Stockwell', atLength : 76 ,position : { x : 1203, y : 1360, type: 'circle'}},
+			{ code : 'TTH' , name : 'Tottenham Hale', atLength : 1622 ,position : { x : 1809, y : 363, type: 'circle'}},
+			{ code : 'VUX' , name : 'Vauxhall', atLength : 214 ,position : { x : 1106, y : 1262, type: 'circle'}},
+			{ code : 'VIC' , name : 'Victoria', atLength : 470 ,position : { x : 1080, y : 1017, type: 'circle'}},
+			{ code : 'WAL' , name : 'Walthamstow Central', atLength : 1768 ,position : { x : 1957, y : 363, type: 'circle'}},
+			{ code : 'WST' , name : 'Warren Street', atLength : 857 ,position : { x : 1256, y : 700, type: 'circle'}}
 		]
 	} 
 

@@ -20,7 +20,8 @@ define([
 			$(this.el).html(this.template());
 		},
 		
-		renderRows : function(){       
+		renderRows : function(){
+			       
 			var container = $(this.el),
 				line = this.model.get('info').line,
 				trains = this.model.toJSON().trains,

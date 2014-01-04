@@ -76,30 +76,37 @@ src: url("font/CodeBold.otf") format("opentype");
 
 #search {
 	width:100%;
-	margin:10px auto 10px;  
+	position:relative;
+	font-family:Fabrica;  
 }   
 
 #search-text {
-	width:100%;
-	height:30px;
-	line-height:30px;
-	font-size:20px;
-	text-indent:8px;
+	width: 100%;
+	height: 40px;
+	line-height: 44px;
+	font-size: 18px;
+	text-indent: 40px;
+	background: rgba(0,0,0,0.4);
+	border: none;
+	text-transform: uppercase;
+	color: #fff;
 }
 
 #search-results {
 	position: absolute;
 	z-index: 1000;
-	background: #fff;
+	background: transparent;
 	width: 400px;
-	top: 50px;
-	border: 1px solid #ccc;
+	top: 40px;
+	border-bottom:3px solid rgba(0,0,0,0.3);
 }
 
 #search-results li {
-	padding:8px;
 	font-family:Fabrica;
 	font-size:18px;
+	line-height:34px; 
+	position:relative; 
+	text-indent:40px;
 }
 
 #search-results li:hover {
@@ -107,7 +114,34 @@ src: url("font/CodeBold.otf") format("opentype");
 }
 
 #search-results li:nth-child(odd) {
-	background:#eaeaea;
+	background:rgba(234, 234, 234, 0.9);
+}
+
+#search-results li:nth-child(even) {
+	background:rgba(255, 255, 255, 0.9);
+}
+
+#search-results li span,
+#search .selected {
+	color:#fff;
+	font-size:16px;
+	display:block;
+	position:absolute;
+	top:1px;
+	left:0px;
+	line-height:34px;
+	width:28px;
+	height:32px;
+	text-indent:8px;
+}
+#search .selected {
+	top: 0px;
+	left: 0px;
+	width:28px;
+	height:40px;
+	font-size:18px;
+	line-height: 48px;
+	color:rgba(255,255,255,0.8); 
 }
 
 /**Tube **/ 
@@ -118,9 +152,6 @@ src: url("font/CodeBold.otf") format("opentype");
 	height:300px;
 	overflow:hidden;
 	position:relative;
-	box-shadow:2px 2px 3px #ccc;
-	border:1px solid #eaeaea;
-	margin:0px auto 20px;
 }
 
 #Stations,
@@ -152,14 +183,13 @@ src: url("font/CodeBold.otf") format("opentype");
 }
 
 .lines {
-	opacity:0.3;
+	/*opacity:0.3;*/
 }
 
 /**List **/
 
 #table {
 	width:100%;
-	margin:20px auto 20px;
 }
 
 .tube-lines{
@@ -237,6 +267,10 @@ src: url("font/CodeBold.otf") format("opentype");
 	fill : none;
 }
 
+.C-icon {
+	background: #ED3024;
+}
+
 .H {
 	fill : #F285A0
 }
@@ -252,6 +286,10 @@ src: url("font/CodeBold.otf") format("opentype");
 	fill : none;	
 }
 
+.H-icon {
+	background: #F285A0;
+}
+
 .D {
 	fill : #00843F;
 }
@@ -265,6 +303,10 @@ src: url("font/CodeBold.otf") format("opentype");
 	stroke-width : 6;
 	stroke : #00843F;
 	fill : none;	
+} 
+
+.D-icon {
+	background: #00843F;
 }
 
 .Ci {
@@ -282,6 +324,10 @@ src: url("font/CodeBold.otf") format("opentype");
 	fill : none;	
 }
 
+.Ci-icon {
+	background: #FFD200;
+}
+
 .N {
 	fill : #231F20;
 }
@@ -295,6 +341,10 @@ src: url("font/CodeBold.otf") format("opentype");
 	stroke-width : 6;
 	stroke : #231F20;
 	fill : none;	
+}
+
+.N-icon {
+	background: #231F20;
 }
 
 .B {
@@ -312,6 +362,10 @@ src: url("font/CodeBold.otf") format("opentype");
 	fill : none;	
 }
 
+.B-icon {
+	background: #AF6010;
+}
+
 .M {
 	fill : #96005E;
 }
@@ -325,6 +379,10 @@ src: url("font/CodeBold.otf") format("opentype");
 	stroke-width : 6;
 	stroke : #96005E;
 	fill : none;	
+}
+
+.M-icon {
+	background: #96005E;
 }
 
 .P {
@@ -342,6 +400,10 @@ src: url("font/CodeBold.otf") format("opentype");
 	fill : none;	
 }
 
+.P-icon {
+	background: #1C3E93;
+}
+
 .V {
 	fill : #009CDB;
 }
@@ -355,6 +417,10 @@ src: url("font/CodeBold.otf") format("opentype");
 	stroke-width : 6;
 	stroke : #009CDB;
 	fill : none;	
+}
+
+.V-icon {
+	background: #009CDB;
 }
 
 .EL {
@@ -372,6 +438,10 @@ src: url("font/CodeBold.otf") format("opentype");
 	fill : none;	
 }
 
+.EL-icon {
+	background: #F7931E;
+}
+
 .DLR {
 	fill : #00A99D;
 }
@@ -387,6 +457,10 @@ src: url("font/CodeBold.otf") format("opentype");
 	fill : none;	
 }
 
+.DLR-icon {
+	background: #00A99D;
+}
+
 .J {
 	fill : #939BA0;
 }
@@ -400,6 +474,10 @@ src: url("font/CodeBold.otf") format("opentype");
 	stroke-width : 6;
 	stroke : #939BA0;
 	fill : none;	
+}
+
+.J-icon {
+	background: #939BA0;
 }
 
 .lines-path path{

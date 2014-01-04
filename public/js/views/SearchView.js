@@ -23,7 +23,7 @@ define([
 			this.data = stationsData;
 		},
 		
-		render : function(types){
+		render : function(){
 			$(this.el).html(this.template(this.state.toJSON()));
 		},
 		
@@ -31,10 +31,10 @@ define([
 			var container = $(this.el).find('#search-results'),
 				that = this;
 			container.empty();
-			_.each(results,function(v,k){
+			_.each(results,function(v,k){        				
 				var view = new SearchItemView({
 					state : that.state,
-					model : new Backbone.Model(v)
+					model : new Backbone.Model(v),
 				})
 				container.append(view.render().el)
 			});
@@ -42,8 +42,9 @@ define([
 		
 		controllerFindStation : function(needle){
 			var results = [];
-			_.each(stationsData,function(items){
+			_.each(stationsData,function(items,line){
 				_.each(items,function(v,k){
+					v.line = line.charAt(0);
 					if(v.code.toLowerCase().indexOf(needle) !== -1 || v.name.toLowerCase().indexOf(needle) !== -1){
 						results.push(v);
 					} 

@@ -55,11 +55,25 @@ define([
 			if(!this.model){
 				this.model = new Station({id:this.state.get('code')});
 			}
-			this.model.set({id:state.get('code')});
-			this.model.fetch();
+
+			this.model.fetch(
+				{data: {
+					id: state.get('code'),
+					line : state.get('line')
+				}, 
+				type: 'POST'}
+				);
+				
 			var t = setInterval(function(){
-				that.model.fetch();
-			},60000)
+				that.model.fetch(
+					{data: {
+						id: state.get('code'),
+						line : state.get('line')
+					}, 
+					type: 'POST'}
+				);
+			},60000);
+			
 		},
 		                    
 		controllerNewSelect : function(state){
