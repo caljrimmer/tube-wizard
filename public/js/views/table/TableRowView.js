@@ -37,7 +37,6 @@ define([
 			if(this.model.SecondsTo < 61){                
 				this.submitCountdown = new Countdown(this.model.SecondsTo, function(seconds) {
 					if(seconds % 10 === 0 && seconds > 10) $(template[4]).text(seconds);
-					if(seconds < 10) $(template[4]).text(seconds); 
 					that.charts.radialIncrement({
 						time : seconds
 					});

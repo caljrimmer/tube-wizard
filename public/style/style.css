@@ -402,5 +402,9 @@ src: url("font/CodeBold.otf") format("opentype");
 	fill : none;	
 }
 
+.lines-path path{
+	opacity:0;
+}
+
 
 

@@ -151,20 +151,70 @@ define([
 				
 			});
 		});
+		
+		/*
+		var assetOverlay = svg.append("image")
+			.attr("xlink:href", "images/map.png")
+			.attr("width", 2422)
+			.attr("height", 1620)
+			.attr("transform","translate(38,22)");   
+		*/
+		
+		// Visual SVG all Lines. Not the routes just the aesthetics.
+		var allPathLines = function(){
+
+			_.each(paths,function(v,k){
+
+				var Line = svg.append("g")
+			      .attr("id", k + "-path")
+			      .attr("class","lines-path")
+				  .attr("transform","translate("+ v.x +","+ v.y +")");
+
+				_.each(v.data,function(path){
+					Line.append("svg:path")
+						.attr("d", path.d)
+						.attr("class",v.class + "_line");
+				});
+
+			});
+
+		}();
 			      
 
 	}
 	
 	Tube.prototype.parseVerbose = function(stationsData,trainData){
-		var atStation = false,
-			location = trainData.Location.replace("'",""),
-			where = [];   
+		var location = trainData.Location.replace("'",""),
+			where = [],
+			length,
+			positionAdjust;   
 		
-		//Find mentioned stations from API (two with Between hence the Array)
 		_.each(stationsData.Bakerloo,function(v,k){
 			if(location.indexOf(v.name) !== -1){
-				if(location.indexOf('Platform')) atStation = true;
-				v.atStation = atStation
+				
+				v.positionAdjust = 0;
+				
+				if(location.indexOf('Platform') !== -1){
+					v.positionAdjust = -1;
+				}
+				/*
+				if(location.indexOf('Approaching') !== -1){
+					v.positionAdjust = 0;
+				}
+				if(location.indexOf('Left') !== -1){
+					v.positionAdjust = 0;
+				}
+				if(location.indexOf('North of') !== -1){
+					v.positionAdjust = 0;
+				}
+				if(location.indexOf('South of') !== -1){
+					v.positionAdjust = 0;
+				}
+				*/
+				if(location.indexOf('Between') !== -1){
+					v.positionAdjust = 0.5;
+				}
+				
 				where.push(v);
 			}
 		});
@@ -174,25 +224,31 @@ define([
 			return null;
 		}
 		
-		return where[0].atLength;
-		
-		if(!isAt){
-			if(trainData.Direction === 'Eastbound' || trainData.Direction === 'Southbound'){
-				return Math.floor((where[0].atLength - where[1].atLength)/2);
-			}else{
-				return Math.floor((where[1].atLength - where[0].atLength)/2);
-			}
+		if(where.length > 1){
+			length = ((where[0].atLength - where[1].atLength) * where[0].positionAdjust) +  where[1].atLength;
 		}else{
-			return where[0].atLength;
+			length = where[0].atLength;
 		}
 		
+		return length;
+
+	}
+	
+	Tube.prototype.trainsAnimate = function(startLength,stopLength,secondsTo,secondsToCount,path,killMe){
+		if(secondsToCount === secondsTo){
+			clearInterval(killMe);
+		}
+		var length = Math.floor((((stopLength - startLength) / secondsTo) * secondsToCount) + startLength);   	
+		var p = path.getPointAtLength(length);
+		return "translate(" + [p.x, p.y] + ")";  
 	}
 	
 	Tube.prototype.trains = function(data){
 		var that = this,
-			Line = this.svg.select('#Bakerloo');
+			Line = this.svg.select('#Bakerloo-path'),
+			LineVisual = this.svg.select('#Bakerloo')
 		
-		Line.style('opacity',1)
+		LineVisual.style('opacity',1);
 		
 		//Removes the old trains	
 		Line.selectAll('circle').remove();
@@ -203,15 +259,14 @@ define([
 				var startLength = that.parseVerbose(stationsData,v),
 					stopLength = _.findWhere(stationsData.Bakerloo,{code:data.id}).atLength,
 					direction = v.Direction;
+				
+				v.SecondsTo = parseInt(v.SecondsTo,10);
+				v.SecondsToCount = 0;
 
 				if(startLength){            
 				
 					_.each(Line.selectAll('path')[0],function(path){
 					
-						//Look at journey length against the total path distance.
-						var duration = Math.ceil((path.getTotalLength()/Math.abs(startLength - stopLength)) * parseInt(v.SecondsTo,10) * 1000);
-					   
-						var pathLength = path.getTotalLength(); 
 						var train = Line.append("circle")
 						    .attr({
 							    r: 10,
@@ -227,62 +282,20 @@ define([
 						var trainNumber = Line.append("text")
 							.attr("dy",".35em")
 							.attr("text-anchor","middle")
-							.attr('class', 'tube-number')  
+							.attr('class', 'tube-number')
+							.attr('transform',function () {
+						        var p = path.getPointAtLength(startLength)
+						        return "translate(" + [p.x, p.y] + ")";
+						    })  
 							.text(v.index);
 					    
-						if(parseInt(v.SecondsTo,10) < 301){ 
-							train.transition()
-							    .duration(duration)
-							    .ease("linear")
-							    .attrTween("transform", function (d, i) {
-							    return function (t) {
-									if(direction === "Southbound"){
-										var length = startLength - (startLength*t);
-										if(stopLength < length){
-								        	var p = path.getPointAtLength(length);
-											return "translate(" + [p.x, p.y] + ")"; 
-										}else{
-											train.remove();
-										}
-									}else{
-										var length = ((pathLength-startLength)*t) + startLength;
-										if(stopLength > length){
-								        	var p = path.getPointAtLength(length);
-											return "translate(" + [p.x, p.y] + ")"; 
-										}else{
-											train.remove();
-										}
-
-									}
-							    }
-							});
-				
-							trainNumber.transition()
-							    .duration(duration)
-							    .ease("linear")
-							    .attrTween("transform", function (d, i) {
-							    return function (t) {
-									if(direction === "Southbound"){
-										var length = startLength - (startLength * t);
-										if(stopLength < length){
-								        	var p = path.getPointAtLength(length);
-											return "translate(" + [p.x, p.y] + ")"; 
-										}else{
-											train.remove();
-										}
-									}else{
-										var length = ((pathLength-startLength)*t) + startLength;
-										if(stopLength > length){
-								        	var p = path.getPointAtLength(length);
-											return "translate(" + [p.x, p.y] + ")"; 
-										}else{
-											train.remove();
-										}
-
-									}
-							    }
-							});    
-						
+						if(v.positionAdjust !== -1){
+							var killMe = setInterval(function(){
+								v.SecondsToCount = v.SecondsToCount + 1;
+								var position = that.trainsAnimate(startLength,stopLength,v.SecondsTo,v.SecondsToCount,path,killMe);
+								train.attr('transform',position);
+								trainNumber.attr('transform',position);
+							},1000);
 						}  
 
 					});   
