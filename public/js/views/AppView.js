@@ -21,6 +21,7 @@ define([
 				this.state = new Backbone.Model(JSON.parse(window.localStorage.getItem('tw-state')))
 			}else{
 				this.state = new Backbone.Model(stationsData.Bakerloo[14]);
+				this.state.set({line:'V'});
 			}
 			this.state.bind('change',this.controllerNewSelect,this); 
 			this.controllerModelFetchInterval(this.state)
