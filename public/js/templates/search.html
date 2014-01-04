@@ -1,3 +1,5 @@
 <input type="text" id="search-text" value="<%= name%> (<%= code%>)"/>
+<%if(typeof(line) !== "undefined"){%>
 <span class="<%= line %>-icon selected"><%= line %></span>
+<%}%>
 <ul id="search-results"></ul>
