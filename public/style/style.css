@@ -443,7 +443,8 @@ rect.progress-bk {
 }
 
 .B-direction .selected{
-	color:#AF6010;
+	background:#AF6010;
+	color:#fff;
 	opacity:1;
 }
 
@@ -511,7 +512,8 @@ rect.progress-bk {
 }
 
 .V-direction .selected{
-	color:#009CDB;
+	background:#009CDB;
+	color:#fff;
 	opacity:1;
 }
 
