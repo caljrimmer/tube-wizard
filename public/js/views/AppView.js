@@ -25,11 +25,10 @@ define([
 			}
 			this.state.bind('change',this.controllerNewSelect,this); 
 			this.controllerModelFetchInterval(this.state);
-			
-			//Mobile Error show
-			window.onerror = function(message, url, linenumber) {
-			  alert("JavaScript error: " + message + " on line " + linenumber + " for " + url);
-			}
+
+			$(document).ajaxError(function(event, xhr, settings, exception) { 
+				console.log(event, xhr, settings, exception)
+			});
 			
 		},
 		

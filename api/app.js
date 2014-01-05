@@ -76,7 +76,7 @@ app.post('/api/station/:code', function(req, res){
 				res.end(obj);     
 			});
 		}else{
-			console.log(error)
+			console.log(error, response.statusCode)
 		} 
 	})     
 
