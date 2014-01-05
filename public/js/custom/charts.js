@@ -55,22 +55,52 @@ define(['jquery', 'underscore', 'backbone', 'registry', 'd3'], function($, _, Ba
 					return arc(d);   
 				};  
 			});          
-		}  
+		} 
 
-	}
+	};
 	
-	Chart.prototype.radialIncrement = function(obj){
+	Chart.prototype.progessBar = function(target,obj){
+		
+		$(target).empty();  
+		
+		var width = obj.width,
+			height = obj.height;
+		
+		var svg = d3.select(target[0]).append("svg")
+		    .attr("width", width)
+		    .attr("height", height)
+		
+		var background = svg.append("rect")
+		    .attr("class","progress-bk")
+		    .attr("x", 0)
+			.attr("y", 0)
+			.attr("height",height)
+			.attr("width", width);  
+
+		this.indicator = svg.append("rect")
+		    .attr("class",obj.type)
+		    .attr("x", width - (this.perc * width))
+			.attr("y", 0)
+			.attr("height",height)
+			.attr("width", this.perc * width);
+			
+	};
+	
+	Chart.prototype.increment = function(obj){
 		
 		if(obj.time < this.periodLimit){
 			this.perc = (this.periodLimit-obj.time)/this.periodLimit;
 		}
+		
 		if(this.perc <= 1){ 
 			this.foreground.transition()
 		      .duration(750)
 		      .call(this.arcTween, this.perc * this.angle);
+		
+			this.indicator.attr("width",this.perc * 360);
 		}
 		
-	}
+	};
 
 	return Chart;
 

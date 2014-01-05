@@ -70,6 +70,9 @@ app.post('/api/station/:code', function(req, res){
 				obj.info = result.ROOT.S[0].$;
 				obj.info.line = result.ROOT.Line[0];
 				obj.info.lineName = result.ROOT.LineName[0];
+				obj.info.directions = [];
+				obj.info.directions.push(result.ROOT.S[0].P[0].$.N.split('-')[0].replace(' ',''));
+				obj.info.directions.push(result.ROOT.S[0].P[1].$.N.split('-')[0].replace(' ',''));
 				obj.trains = filter(result.ROOT.S[0].P);
 				obj = JSON.stringify(obj);
 				res.writeHead(200, { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(obj, 'utf8')});

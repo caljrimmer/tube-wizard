@@ -45,7 +45,6 @@ define([
 				model : this.model,
 				state : this.state
 			});
-			this.tableView.render();
 			
 			this.tubeView = new TubeView({
 				el : $(this.el).find('#map-viewport'),

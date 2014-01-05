@@ -11,8 +11,6 @@ define([
 	
 		tagName : 'li',
 		
-		className : 'clearfix',
-		
 		template : _.template(TableRowTemplate),
 		
 		initialize : function(){
@@ -25,7 +23,7 @@ define([
 				that = this;
 			
 			$(this.el).html(template);
-			
+			   
 			this.charts.radial($(that.el).find('.radial'),{
 				height : 30,
 				width : 30,
@@ -34,10 +32,16 @@ define([
 				index : this.model.index
 			});
 			
+			this.charts.progessBar($(that.el).find('.progress'),{
+				width:360,
+				height:3,
+				type : this.model.line
+			});
+			
 			if(this.model.SecondsTo < 61){                
 				this.submitCountdown = new Countdown(this.model.SecondsTo, function(seconds) {
 					if(seconds % 10 === 0 && seconds > 10) $(template[4]).text(seconds);
-					that.charts.radialIncrement({
+					that.charts.increment({
 						time : seconds
 					});
 				}, function() {

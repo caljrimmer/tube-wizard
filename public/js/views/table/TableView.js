@@ -10,38 +10,54 @@ define([
 		
 		template : _.template(TableTemplate),
 		
+		events : {
+			'click [data-filter]' : 'eventDirection'
+		},
+		
 		initialize : function(options){
 			this.state = options.state;
-			this.state.bind('change',this.renderRows,this);
-			this.model.bind('sync',this.renderRows,this);
+			this.state.bind('change',this.render,this);
+			this.model.bind('sync',this.render,this);
 		},
 		
-		render : function(types){
-			$(this.el).html(this.template());
+		render : function(){
+			$(this.el).html(this.template(this.model.toJSON()));
+			this.renderRows();
 		},
 		
-		renderRows : function(){
-			       
+		renderRows : function(){   
 			var container = $(this.el),
-				line = this.model.get('info').line,
+				info = this.model.get('info'),
 				trains = this.model.toJSON().trains,
 				count = 0;
-				
 			container.find('ul.tube-lines').empty();
 			trains = _.groupBy(trains, 'Direction');
-			
 			_.each(trains,function(v,k){
-				container.find('ul.tube-lines').append('<li class="header">'+k+'</li>');
 				_.each(v,function(v2,k2){
-					v2.line = line;
-					v2.index = count + 1;
-					var view = new TableRowView({
-						model : v2
-					});
-					container.find('ul.tube-lines').append(view.render().el);
-					++count;
+					if(k2 < 4){
+						v2.line = info.line;
+						v2.index = count + 1;
+						var view = new TableRowView({
+							model : v2,
+							className : v2.Direction + ' clearfix'
+						});
+						container.find('ul.tube-lines').append(view.render().el); 
+					}
+					++count; 
 				});
 			});
+			this.afterRenderSelected();
+		},
+		
+		afterRenderSelected : function(co){
+			$(this.el).find('[data-filter]').removeClass('selected');
+			$(this.el).find('.'+this.state.get('direction')).show();
+			$(this.el).find('[data-filter="'+this.state.get('direction')+'"]').addClass('selected');
+		},
+		
+		eventDirection : function(e){
+			this.state.set({direction:$(e.target).attr('data-filter')},{silent:true});
+			this.renderRows(); 
 		}
 		  
 	});

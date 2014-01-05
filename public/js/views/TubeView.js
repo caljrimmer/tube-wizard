@@ -27,7 +27,7 @@ define([
 			if(_.has(state,'position')){ 
 				$(this.el).find('#map').animate({
 					left: - state.position.x + ($(this.el).width()/2),
-					top: - state.position.y + ($(this.el).height()/2)
+					top: - state.position.y + ($(this.el).height()/2) - 100
 				},500);
 				d3.selectAll('.labelOn').attr('class','label');
 				d3.selectAll('#'+this.state.get('code')).attr('class','labelOn');  
