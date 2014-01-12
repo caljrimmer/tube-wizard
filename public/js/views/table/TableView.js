@@ -16,7 +16,7 @@ define([
 		
 		initialize : function(options){
 			this.state = options.state;
-			this.state.bind('change',this.render,this);
+			//this.state.bind('change',this.render,this);
 			this.model.bind('sync',this.render,this);
 		},
 		
