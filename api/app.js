@@ -37,52 +37,9 @@ app.configure('production', function(){
 });
 
 app.post('/api/station/:code', function(req, res){
-	
-	var parseString = xml2js.parseString,
-		obj = {};
-		
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "X-Requested-With");
-	
-	var filter = function(data){
-		var newArr = [];
-		_.each(data,function(v,k){
-			_.each(v.T,function(v2,k2){
-				var newData = {
-					Direction : v.$.N.split('-')[0].replace(' ',''),
-					SecondsTo: v2.$.SecondsTo,
-					TimeTo: v2.$.TimeTo,
-					Location: v2.$.Location,
-					Destination: v2.$.Destination,
-					DepartTime: v2.$.DepartTime,
-				};
-				newArr.push(newData);	
-			});
-		});
-		return newArr;
-	};
-    
-	var request = require('request');
-	request('http://cloud.tfl.gov.uk/TrackerNet/PredictionDetailed/'+req.body.line+'/'+req.body.id, function (error, response, body) {
-		if (!error && response.statusCode == 200) {
-			parseString(body, function (err, result) {
-				obj.id = result.ROOT.S[0].$.Code;
-				obj.info = result.ROOT.S[0].$;
-				obj.info.line = result.ROOT.Line[0];
-				obj.info.lineName = result.ROOT.LineName[0];
-				obj.info.directions = [];
-				obj.info.directions.push(result.ROOT.S[0].P[0].$.N.split('-')[0].replace(' ',''));
-				obj.info.directions.push(result.ROOT.S[0].P[1].$.N.split('-')[0].replace(' ',''));
-				obj.trains = filter(result.ROOT.S[0].P);
-				obj = JSON.stringify(obj);
-				res.writeHead(200, { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(obj, 'utf8')});
-				res.end(obj);     
-			});
-		}else{
-			console.log(error, response.statusCode)
-		} 
-	})     
-
+	stations.getStation(req, res);
 }); 
 
 var server = http.createServer(app).listen(4001, function(){

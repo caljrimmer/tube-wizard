@@ -21,7 +21,10 @@ define([
 		},
 		
 		render : function(){
-			$(this.el).html(this.template(this.model.toJSON()));
+			this.model.set({line:this.state.get('line')},{silent:true});
+			var model = this.model.toJSON();
+			model.info.directions.sort()
+			$(this.el).html(this.template(model));
 			this.renderRows();
 		},
 		
@@ -29,6 +32,7 @@ define([
 			var container = $(this.el),
 				info = this.model.get('info'),
 				trains = this.model.toJSON().trains,
+				that = this,
 				count = 0;
 			container.find('ul.tube-lines').empty();
 			trains = _.groupBy(trains, 'Direction');
@@ -39,6 +43,7 @@ define([
 						v2.index = count + 1;
 						var view = new TableRowView({
 							model : v2,
+							state : that.state,
 							className : v2.Direction + ' clearfix'
 						});
 						container.find('ul.tube-lines').append(view.render().el); 
@@ -49,10 +54,26 @@ define([
 			this.afterRenderSelected();
 		},
 		
-		afterRenderSelected : function(co){
-			$(this.el).find('[data-filter]').removeClass('selected');
-			$(this.el).find('.'+this.state.get('direction')).show();
-			$(this.el).find('[data-filter="'+this.state.get('direction')+'"]').addClass('selected');
+		afterRenderSelected : function(){
+			
+			if(!_.has(this.state.toJSON(),'direction')){ 
+				this.state.set({direction:$(this.el).find('[data-filter]').eq(0).text()},{silent:true});
+			}
+
+			if(!_.contains(this.model.get('info').directions,this.state.get('direction'))){
+				this.state.set({direction:$(this.el).find('[data-filter]').eq(0).text()},{silent:true});
+			}
+			
+			
+			if(this.model.get('info').directions.length){
+				$(this.el).find('[data-filter]').removeClass('selected');
+				$(this.el).find('.'+this.state.get('direction')).show();
+				$(this.el).find('[data-filter="'+this.state.get('direction')+'"]').addClass('selected');
+				$(this.el).show(); 
+			}else{
+				$(this.el).hide();
+			}
+			
 		},
 		
 		eventDirection : function(e){

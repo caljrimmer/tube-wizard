@@ -7,6 +7,7 @@ require.config({
 		'd3' : 'vendor/d3',
 		'countdown' : 'vendor/countdown',
 		'charts' : 'custom/charts',
+		'draggable' : 'vendor/draggable',
 		'registry' : 'custom/registry'
     },
 	shim: {

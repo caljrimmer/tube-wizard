@@ -56,6 +56,12 @@ define([
 		
 		 _.each(stationsMap,function(v,k){
 			
+			var lineClass = k.charAt(0);
+				
+			if(k === "Circle"){
+				lineClass = 'Ci';
+			}  
+			
 			_.each(v,function(item){
 
 				if(item.position.type === 'circle'){
@@ -69,22 +75,63 @@ define([
 						.style("stroke-width",3)
 						.style("opacity",0.6); 
 						
-					StationsMap.append("rect")
-						.attr('class','label')
-						.attr('id',item.code)
-						.attr("x", item.position.x + 15)
-						.attr("y", item.position.y - 8)
-						.attr("width",36)
-						.attr('height',16); 
+					if(item.position.text === 'W'){
 					
-					StationsMap.append("text")
-						.attr("x", item.position.x + 20)
-						.attr("y", item.position.y + 4) 
-						.text(item.code);
+						StationsMap.append("rect")
+							.attr('class','label')
+							.attr('id',item.code)
+							.attr("x", item.position.x + 15)
+							.attr("y", item.position.y - 8)
+							.attr("width",36)
+							.attr('height',16); 
+					
+						StationsMap.append("text")
+							.attr("x", item.position.x + 20)
+							.attr("y", item.position.y + 4) 
+							.text(item.code);  
+					
+					}
+					
+					if(item.position.text === 'N'){
+					
+						StationsMap.append("rect")
+							.attr('class','label')
+							.attr('id',item.code)
+							.attr("x", item.position.x - 15)
+							.attr("y", item.position.y - 30)
+							.attr("width",36)
+							.attr('height',16); 
+					
+						StationsMap.append("text")
+							.attr("x", item.position.x - 8)
+							.attr("y", item.position.y - 18) 
+							.text(item.code);  
+					
+					}
+					
+					if(item.position.text === 'S'){
+					
+						StationsMap.append("rect")
+							.attr('class','label')
+							.attr('id',item.code)
+							.attr("x", item.position.x - 15)
+							.attr("y", item.position.y + 14)
+							.attr("width",36)
+							.attr('height',16); 
+					
+						StationsMap.append("text")
+							.attr("x", item.position.x - 8)
+							.attr("y", item.position.y + 26) 
+							.text(item.code);  
+					
+					}
 						
 				}
 				
-				if(item.position.type === 'rect'){
+				if(item.position.type === 'rect'){ 
+					
+				   
+					
 					if(item.position.attr.rotate === 0){
 						
 						StationsMap.append("rect")
@@ -92,37 +139,46 @@ define([
 							.attr("y", item.position.y + item.position.attr.offset.y - 3)
 							.attr("width", 8)
 							.attr("height", 6) 
-							.attr("class",k.charAt(0));
+							.attr("class",lineClass);
 							
 							if(item.position.attr.offset.x >= 0){
 								
-								StationsMap.append("rect")
-									.attr('class','label')
-									.attr('id',item.code)
-									.attr("x", item.position.x + 15)
-									.attr("y", item.position.y - 8)
-									.attr("width",36)
-									.attr('height',16);
+								if(item.position.text !== '-'){
+									
+									StationsMap.append("rect")
+										.attr('class','label')
+										.attr('id',item.code)
+										.attr("x", item.position.x + 15)
+										.attr("y", item.position.y - 8)
+										.attr("width",36)
+										.attr('height',16);
+									 
+									StationsMap.append("text")
+										.attr("x", item.position.x + 20)
+										.attr("y", item.position.y + 4) 
+										.text(item.code);
+										   
+								}       
 								
-								StationsMap.append("text")
-									.attr("x", item.position.x + 20)
-									.attr("y", item.position.y + 4) 
-									.text(item.code);
 									  
 							}else{
 								
-								StationsMap.append("rect")
-									.attr('class','label')
-									.attr('id',item.code)
-									.attr("x", item.position.x - 55)
-									.attr("y", item.position.y - 8)
-									.attr("width",36)
-									.attr('height',16);
-								
-								StationsMap.append("text")
-									.attr("x", item.position.x + item.position.attr.offset.x - 40)
-									.attr("y", item.position.y + 4) 
-									.text(item.code);
+								if(item.position.text !== '-'){
+									
+									StationsMap.append("rect")
+										.attr('class','label')
+										.attr('id',item.code)
+										.attr("x", item.position.x - 55)
+										.attr("y", item.position.y - 8)
+										.attr("width",36)
+										.attr('height',16);
+									
+									StationsMap.append("text")
+										.attr("x", item.position.x + item.position.attr.offset.x - 40)
+										.attr("y", item.position.y + 4) 
+										.text(item.code);
+										 
+								}
 									
 							}
 							   
@@ -133,40 +189,42 @@ define([
 							.attr("y", item.position.y + item.position.attr.offset.y)
 							.attr("width", 6)
 							.attr("height", 8) 
-							.attr("class",k.charAt(0));
-						
-						StationsMap.append("rect")
-							.attr('class','label')
-							.attr('id',item.code)
-							.attr("x", item.position.x - 16)
-							.attr("y", item.position.y - 28)
-							.attr("width",36)
-							.attr('height',16); 
+							.attr("class",lineClass);
 
-						StationsMap.append("text")
-							.attr("x", item.position.x - 10)
-							.attr("y", item.position.y - 16) 
-							.text(item.code); 
+						if(item.position.text !== '-'){
+							
+							StationsMap.append("rect")
+								.attr('class','label')
+								.attr('id',item.code)
+								.attr("x", item.position.x - 16)
+								.attr("y", item.position.y - 28)
+								.attr("width",36)
+								.attr('height',16);
+							
+							StationsMap.append("text")
+								.attr("x", item.position.x - 10)
+								.attr("y", item.position.y - 16) 
+								.text(item.code);  
+						}
 										
 					}  
 				}
 				
 			});
 		});
-		
-        /*
+        
+		/*
 		var assetOverlay = svg.append("image")
 			.attr("xlink:href", "images/map.png")
 			.attr("width", 2422)
 			.attr("height", 1620)
 			.attr("transform","translate(38,22)");   
-        
 
 		this.svg.on('click',function(){
 			console.log(d3.mouse(this));
 		}); 
 		
-		*/ 
+		*/  
 		
 		// Tracking of Trains SVG all Lines. Inivisble to user.
 		var allPathLines = function(){
@@ -192,6 +250,9 @@ define([
 	}
 	
 	Tube.prototype.parseVerbose = function(stationsData,trainData){
+		
+		if(!_.has(trainData,'Location')) trainData.Location = "";
+		
 		var location = trainData.Location.replace("'",""),
 			where = [],
 			length,
@@ -253,7 +314,18 @@ define([
 	
 	Tube.prototype.trains = function(data){
 		
-		var testLine = data.info.lineName.split(' ')[0];
+		//var testLine = 'Hammersmith';
+		var testLine = data.info.lineName.split(' ')[0].replace(',','');
+		var testLineClass = testLine.charAt(0);
+		
+		if(testLine === 'Circle'){
+			testLineClass = 'Ci';
+		}
+		
+		if(data.line === 'H'){
+			testLineClass = 'H';
+			testLine = 'Hammersmith'; 
+		}
 		
 		var that = this,
 			Line = this.svg.select('#'+testLine+'-path');
@@ -262,16 +334,13 @@ define([
 		d3.selectAll('.lines-path circle').remove();
 		d3.selectAll('.lines-path text').remove();
 		
-		/**
-		*
-		*Find the Lengths
-		*
+        /*
 		var trainBlob = Line.append("circle")
 		    .attr({
 			    r: 10,
-			    class : 'B',
+			    class : 'H',
 			    transform: function () {
-			        var p = Line.selectAll('path')[0][0].getPointAtLength(76)
+			        var p = Line.selectAll('path')[0][0].getPointAtLength(1936)
 			        return "translate(" + [p.x, p.y] + ")";
 			    }  
 			})
@@ -279,7 +348,7 @@ define([
 			.style('stroke-width',2);
 		
 		console.log(Line.selectAll('path')[0][0].getTotalLength())
-		*/
+        */
 		
 		_.each(data.trains,function(v,k){
 			
@@ -297,7 +366,7 @@ define([
 						var train = Line.append("circle")
 						    .attr({
 							    r: 10,
-							    class : testLine.charAt(0),
+							    class : testLineClass,
 							    transform: function () {
 							        var p = path.getPointAtLength(startLength)
 							        return "translate(" + [p.x, p.y] + ")";

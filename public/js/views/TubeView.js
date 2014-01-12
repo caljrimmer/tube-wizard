@@ -3,8 +3,9 @@ define([
   'underscore',
   'backbone',
   'd3',
+  'draggable',
   'custom/tube'
-], function($, _, Backbone, d3, Tube){
+], function($, _, Backbone, d3, Draggable, Tube){
 	
     var TubeView = Backbone.View.extend({
 		
@@ -20,6 +21,7 @@ define([
 			this.tube.map($(this.el).find('#map')); 
 			d3.selectAll('.labelOn').attr('class','label');
 			d3.selectAll('#'+this.state.get('code')).attr('class','labelOn');
+			this.draggable = new Draggable(this.$el.find('#map')[0]); 
 		},
 		
 		renderMapShift : function(model){
@@ -34,7 +36,7 @@ define([
 			}
 		},
 		
-		controllerTrains : function(model){ 
+		controllerTrains : function(model){
 			this.tube.trains(model.toJSON());
 		}
 		  

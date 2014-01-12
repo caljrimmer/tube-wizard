@@ -100,7 +100,7 @@ src: url("font/CodeBold.otf") format("opentype");
 	height: 50px;
 	line-height: 50px;
 	font-size: 18px;
-	text-indent: 40px;
+	text-indent: 58px;
 	background: rgba(0,0,0,0.7);
 	border: none;
 	text-transform: uppercase;
@@ -113,7 +113,7 @@ src: url("font/CodeBold.otf") format("opentype");
 	z-index: 1000;
 	background: transparent;
 	width: 420px;
-	top: 40px;
+	top: 50px;
 }
 
 #search-results li {
@@ -156,10 +156,11 @@ src: url("font/CodeBold.otf") format("opentype");
 #search .selected {
 	top: 0px;
 	left: 0px;
-	width:28px;
+	width:50px;
 	height:50px;
 	font-size:18px;
 	line-height: 54px;
+	text-indent:20px;
 	color:rgba(255,255,255,0.8); 
 }
 
@@ -193,13 +194,6 @@ src: url("font/CodeBold.otf") format("opentype");
 	cursor:pointer;
 }
 
-.tube-number {
-	font-family:Fabrica;
-	font-size:11px;
-	fill:#fff;
-	font-weight:bold;
-}
-
 .lines {
 	/*opacity:0.3;*/
 }
@@ -213,6 +207,7 @@ src: url("font/CodeBold.otf") format("opentype");
 	padding: 5px 5px 0 5px;
 	bottom: 20px;
 	left: 15px;
+	box-shadow: 2px 2px 3px #666;
 }
 
 .direction-select {
@@ -294,7 +289,7 @@ src: url("font/CodeBold.otf") format("opentype");
 	font-weight:normal;
 	opacity:0.7;
 }
-              
+        
 .tube-lines li .time {
 	width:50px;
 	margin:5px;
@@ -310,10 +305,11 @@ src: url("font/CodeBold.otf") format("opentype");
 	height:3px;
 	position:absolute;
 	bottom:0;
-} 
+}
 
-rect.progress-bk {
-	fill:#fff;
+.Ci-table li .location,
+.Ci-table li .time {
+	color : #0019AB;
 } 
 
 .tube-lines li .progress svg {
@@ -332,6 +328,24 @@ rect.progress-bk {
 
 .radial path {
 	fill:#fff;
+}
+
+rect.progress-bk {
+	fill:#fff;
+}
+
+.tube-number {
+	font-family:Fabrica;
+	font-size:11px;
+	fill:#fff;
+	font-weight:bold;
+}
+
+.Ci-table .perc-value,
+.Ci-table .radial path,
+.Ci-table rect.progress-bk,
+#Circle-path .tube-number {
+	fill:#0019AB;
 }
 
 .C {
@@ -358,8 +372,9 @@ rect.progress-bk {
 }
 
 .H_bk {
-	stroke : #F285A0;
-	fill : #fff;
+	fill : #F285A0;
+	stroke : #fff;
+	stroke-width : 2;
 }
 
 .H_line {
@@ -370,6 +385,17 @@ rect.progress-bk {
 
 .H-icon {
 	background: #F285A0;
+}
+
+.H-table li,
+.H-table li .indicator {
+	background: #F285A0;
+}
+
+.H-direction .selected{
+	background:#F285A0;
+	color:#fff;
+	opacity:1;
 }
 
 .D {
@@ -396,8 +422,9 @@ rect.progress-bk {
 }
 
 .Ci_bk {
-	stroke : #FFD200;
-	fill : #fff;
+	fill : #FFD200;
+	stroke : #0019AB;
+	stroke-width : 2;
 }
 
 .Ci_line {
@@ -408,6 +435,17 @@ rect.progress-bk {
 
 .Ci-icon {
 	background: #FFD200;
+} 
+
+.Ci-table li,
+.Ci-table li .indicator {
+	background: #FFD200;
+}
+
+.Ci-direction .selected{
+	background:#FFD200;
+	color:#0019AB;
+	opacity:1;
 }
 
 .N {

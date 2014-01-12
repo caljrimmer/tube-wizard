@@ -9,7 +9,7 @@ define([
   'views/TubeView' 
 ], function($, _, Backbone, Tube, stationsData, Station, BaseView, TubeView){
 	
-    var AppView = BaseView.extend({
+    var MapView = BaseView.extend({
 	
 		el : $('#canvas'),
 		
@@ -43,7 +43,13 @@ define([
 		
 		controllerModelFetchInterval : function(state,interval){
 			var that = this;
-			this.model.fetch();
+			this.model.fetch(
+				{data: {
+					id: 'oxc',
+					line : 'c'
+				}, 
+				type: 'POST'}
+			);
 		},
 		                    
 		controllerNewSelect : function(state){
@@ -52,7 +58,7 @@ define([
 		  
 	});
 	
-	return AppView
+	return MapView
 
 });
 

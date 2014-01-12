@@ -45,6 +45,7 @@ define([
 			_.each(stationsData,function(items,line){
 				_.each(items,function(v,k){
 					v.line = line.charAt(0);
+					if(line === 'Circle') v.line = "Ci";
 					if(v.code.toLowerCase().indexOf(needle) !== -1 || v.name.toLowerCase().indexOf(needle) !== -1){
 						results.push(v);
 					} 
@@ -55,6 +56,7 @@ define([
 		
 		eventFocus : function(e){
 			$(e.target).val('');
+			$(this.el).find('.selected').hide();
 			this.eventSearch(e);
 		},
 		

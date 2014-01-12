@@ -25,11 +25,6 @@ define([
 			}
 			this.state.bind('change',this.controllerNewSelect,this); 
 			this.controllerModelFetchInterval(this.state);
-
-			$(document).ajaxError(function(event, xhr, settings, exception) { 
-				console.log(event, xhr, settings, exception)
-			});
-			
 		},
 		
 		render : function(types){
@@ -56,15 +51,21 @@ define([
 		},
 		
 		controllerModelFetchInterval : function(state,interval){
-			var that = this;
+			var that = this,
+				line = state.get('line');
+				
 			if(!this.model){
 				this.model = new Station({id:this.state.get('code')});
 			}
+			
+			if(line === "Ci"){
+				line = "h";
+			};      
 
 			this.model.fetch(
 				{data: {
 					id: state.get('code'),
-					line : state.get('line')
+					line : line
 				}, 
 				type: 'POST'}
 				);
@@ -73,7 +74,7 @@ define([
 				that.model.fetch(
 					{data: {
 						id: state.get('code'),
-						line : state.get('line')
+						line : line
 					}, 
 					type: 'POST'}
 				);
