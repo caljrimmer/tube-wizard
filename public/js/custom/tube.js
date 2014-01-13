@@ -92,6 +92,23 @@ define([
 					
 					}
 					
+					if(item.position.text === 'E'){
+					
+						StationsMap.append("rect")
+							.attr('class','label')
+							.attr('id',item.code)
+							.attr("x", item.position.x + 15)
+							.attr("y", item.position.y - 8)
+							.attr("width",36)
+							.attr('height',16); 
+					
+						StationsMap.append("text")
+							.attr("x", item.position.x + 20)
+							.attr("y", item.position.y + 4) 
+							.text(item.code);  
+					
+					}
+					
 					if(item.position.text === 'N'){
 					
 						StationsMap.append("rect")
@@ -222,8 +239,7 @@ define([
 
 		this.svg.on('click',function(){
 			console.log(d3.mouse(this));
-		}); 
-		
+		});
 		*/  
 		
 		// Tracking of Trains SVG all Lines. Inivisble to user.
@@ -266,6 +282,7 @@ define([
 				if(location.indexOf('At ') !== -1){
 					v.positionAdjust = -1;
 				}
+				
 				/*
 				if(location.indexOf('Approaching') !== -1){
 					v.positionAdjust = 0;
@@ -280,6 +297,7 @@ define([
 					v.positionAdjust = 0;
 				}
 				*/
+				
 				if(location.indexOf('Between') !== -1){
 					v.positionAdjust = 0.5;
 				}
@@ -314,8 +332,8 @@ define([
 	
 	Tube.prototype.trains = function(data){
 		
-		//var testLine = 'Hammersmith';
-		var testLine = data.info.lineName.split(' ')[0].replace(',','');
+		var testLine = 'Jubilee';
+		//var testLine = data.info.lineName.split(' ')[0].replace(',','');
 		var testLineClass = testLine.charAt(0);
 		
 		if(testLine === 'Circle'){
@@ -333,14 +351,13 @@ define([
 		//Removes the old trains	
 		d3.selectAll('.lines-path circle').remove();
 		d3.selectAll('.lines-path text').remove();
-		
-        /*
+
 		var trainBlob = Line.append("circle")
 		    .attr({
 			    r: 10,
-			    class : 'H',
+			    class : testLineClass,
 			    transform: function () {
-			        var p = Line.selectAll('path')[0][0].getPointAtLength(1936)
+			        var p = Line.selectAll('path')[0][0].getPointAtLength(2000)
 			        return "translate(" + [p.x, p.y] + ")";
 			    }  
 			})
@@ -348,7 +365,6 @@ define([
 			.style('stroke-width',2);
 		
 		console.log(Line.selectAll('path')[0][0].getTotalLength())
-        */
 		
 		_.each(data.trains,function(v,k){
 			
