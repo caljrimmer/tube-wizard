@@ -341,6 +341,10 @@ rect.progress-bk {
 	font-weight:bold;
 }
 
+.lines-path path{
+	opacity:0;
+}
+
 .Ci-table .perc-value,
 .Ci-table .radial path,
 .Ci-table rect.progress-bk,
@@ -610,8 +614,9 @@ rect.progress-bk {
 }
 
 .J_bk {
-	stroke : #939BA0;
-	fill : #fff;
+	fill : #939BA0;
+	stroke : #fff;
+	stroke-width : 2;
 }
 
 .J_line {
@@ -624,8 +629,15 @@ rect.progress-bk {
 	background: #939BA0;
 }
 
-.lines-path path{
-	opacity:0;
+.J-table li,
+.J-table li .indicator {
+	background: #939BA0;
+}
+
+.J-direction .selected{
+	background:#939BA0;
+	color:#fff;
+	opacity:1;
 }
 
 

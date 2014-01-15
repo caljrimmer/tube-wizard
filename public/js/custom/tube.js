@@ -332,8 +332,8 @@ define([
 	
 	Tube.prototype.trains = function(data){
 		
-		var testLine = 'Jubilee';
-		//var testLine = data.info.lineName.split(' ')[0].replace(',','');
+		//var testLine = 'Jubilee';
+		var testLine = data.info.lineName.split(' ')[0].replace(',','');
 		var testLineClass = testLine.charAt(0);
 		
 		if(testLine === 'Circle'){
@@ -351,13 +351,14 @@ define([
 		//Removes the old trains	
 		d3.selectAll('.lines-path circle').remove();
 		d3.selectAll('.lines-path text').remove();
-
+         
+		/*
 		var trainBlob = Line.append("circle")
 		    .attr({
 			    r: 10,
 			    class : testLineClass,
 			    transform: function () {
-			        var p = Line.selectAll('path')[0][0].getPointAtLength(2000)
+			        var p = Line.selectAll('path')[0][0].getPointAtLength(2234)
 			        return "translate(" + [p.x, p.y] + ")";
 			    }  
 			})
@@ -365,6 +366,7 @@ define([
 			.style('stroke-width',2);
 		
 		console.log(Line.selectAll('path')[0][0].getTotalLength())
+		*/
 		
 		_.each(data.trains,function(v,k){
 			
