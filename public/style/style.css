@@ -23,55 +23,11 @@ body {
     clear: both;
 }
 
-
-@font-face {
-font-family: Klinic;
-src: url("font/KlinicSlabMedium.otf") format("opentype");
-}
-
-@font-face {
-font-family: Klinic;
-font-weight:bold;
-src: url("font/KlinicSlabBold.otf") format("opentype");
-}
-
-@font-face {
-font-family: Klinic;
-font-style:italic;
-src: url("font/KlinicSlabMediumIt.otf") format("opentype");
-}
-
-@font-face {
-font-family: Dense;
-src: url("font/Dense-Regular.otf") format("opentype");
-}
-
 @font-face {
 font-family: Fabrica;
 src: url("font/Fabrica.otf") format("opentype");
 }
 
-@font-face {
-font-family: Nexa;
-src: url("font/NexaLight.otf") format("opentype");
-}
-
-@font-face {
-font-family: Nexa;
-font-weight:bold;
-src: url("font/NexaBold.otf") format("opentype");
-}
-
-@font-face {
-font-family: Code;
-src: url("font/CodeLight.otf") format("opentype");
-}
-
-@font-face {
-font-family: Code;
-font-weight:bold;
-src: url("font/CodeBold.otf") format("opentype");
-}
 
 #canvas {
 	width:420px; 
