@@ -44,10 +44,6 @@ define([
 			}else{
 				view.$el.empty();
 			}
-			                   
-			//Watch List hides Nav
-			$('#page_nav').show();
-			$('#breadcrumb').show();
 		},
 	
 		cleanSubViews : function(){

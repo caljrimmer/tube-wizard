@@ -230,7 +230,7 @@ define([
 			});
 		});
         
-		/*
+
 		var assetOverlay = svg.append("image")
 			.attr("xlink:href", "images/map.png")
 			.attr("width", 2422)
@@ -240,7 +240,7 @@ define([
 		this.svg.on('click',function(){
 			console.log(d3.mouse(this));
 		});
-		*/  
+
 		
 		// Tracking of Trains SVG all Lines. Inivisble to user.
 		var allPathLines = function(){
@@ -332,8 +332,8 @@ define([
 	
 	Tube.prototype.trains = function(data){
 		
-		//var testLine = 'Jubilee';
-		var testLine = data.info.lineName.split(' ')[0].replace(',','');
+		var testLine = 'District';
+		//var testLine = data.info.lineName.split(' ')[0].replace(',','');
 		var testLineClass = testLine.charAt(0);
 		
 		if(testLine === 'Circle'){
