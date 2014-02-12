@@ -5,7 +5,8 @@ body {
 	-khtml-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
-	user-select: none;
+	user-select: none; 
+	height:100%;
 }
 
 ::selection{
@@ -30,10 +31,20 @@ src: url("font/Fabrica.otf") format("opentype");
 
 
 #canvas {
-	width:420px; 
+	width:100%;
+	height:100%; 
 	position:relative;
 	margin:auto;
 	background:#fff;
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px){ 
+	#canvas {
+		width:420px;
+	}
 }
            
 #map {
@@ -158,6 +169,7 @@ src: url("font/Fabrica.otf") format("opentype");
 
 #table {
 	width:380px;
+	height:calc(100% - 80px);
 	position: absolute;
 	background: rgba(0, 0, 0, 0.7);
 	padding: 5px 5px 0 5px;
@@ -196,6 +208,16 @@ src: url("font/Fabrica.otf") format("opentype");
 	margin:0;
 	padding:0;
 	width:100%;
+	height:calc(100% - 40px);
+	overflow:auto;
+} 
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen 
+(max-device-width : 480px){
+	.tube-lines{ 
+		height:200px;
+	}
 }
 
 .tube-lines li {
@@ -363,8 +385,9 @@ rect.progress-bk {
 }
 
 .D_bk {
-	stroke : #00843F;
-	fill : #fff;
+	stroke : #fff;
+	fill : #00843F;
+	stroke-width : 2; 
 }
 
 .D_line {
@@ -375,6 +398,17 @@ rect.progress-bk {
 
 .D-icon {
 	background: #00843F;
+}
+
+.D-table li,
+.D-table li .indicator {
+	background: #00843F;
+}
+
+.D-direction .selected{
+	background:#00843F;
+	color:#fff;
+	opacity:1;
 }
 
 .Ci {

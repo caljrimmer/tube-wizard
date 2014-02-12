@@ -4,13 +4,15 @@ define([
   'backbone',
   'registry',
   'views/AppView',
-  'views/MapView' 
-], function($, _, Backbone, registry, AppView, MapView){
+  'views/MapView',
+  'views/DesktopView'  
+], function($, _, Backbone, registry, AppView, MapView,DesktopView){
 
 	var Router = Backbone.Router.extend({
 
 		routes: {
 			'map' : 'map',
+			'desktop' : 'desktop',
 			'': 'default',
 			'*notFound': 'default'
 		},
@@ -25,6 +27,12 @@ define([
 			registry.zombieKiller();
 			registry.views.mapView = new MapView();
 			registry.views.mapView.render();
+		},
+		
+		desktop : function(){
+			registry.zombieKiller();
+			registry.views.desktopView = new DesktopView();
+			registry.views.desktopView.render();
 		}
 
 	});

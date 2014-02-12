@@ -38,7 +38,6 @@ define([
 			trains = _.groupBy(trains, 'Direction');
 			_.each(trains,function(v,k){
 				_.each(v,function(v2,k2){
-					if(k2 < 4){
 						v2.line = info.line;
 						v2.index = count + 1;
 						var view = new TableRowView({
@@ -47,7 +46,6 @@ define([
 							className : v2.Direction + ' clearfix'
 						});
 						container.find('ul.tube-lines').append(view.render().el); 
-					}
 					++count; 
 				});
 			});
