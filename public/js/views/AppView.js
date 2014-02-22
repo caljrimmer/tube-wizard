@@ -47,6 +47,7 @@ define([
 				state : this.state
 			});
 			this.tubeView.render();
+			this.afterRender();
 
 		},
 		
@@ -80,6 +81,12 @@ define([
 				);
 			},60000);
 			
+		},
+		
+		afterRender : function(){
+			this.$el.find('#map-viewport').css({
+				height: $(window).height()
+			});   
 		},
 		                    
 		controllerNewSelect : function(state){
