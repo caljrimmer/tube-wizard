@@ -9,6 +9,10 @@ body {
 	height:100%;
 }
 
+::-webkit-scrollbar { 
+    display: none; 
+}
+
 ::selection{
 	color:none;
 	background:none;
@@ -210,7 +214,7 @@ and (max-device-width : 480px){
 	padding:0;
 	width:100%;
 	height:calc(100% - 40px);
-	overflow-y:auto;
+	overflow-y:scroll;
 	overflow-x:hidden;
 } 
 
@@ -228,7 +232,7 @@ and (max-device-width : 480px){
 	display:block;
 	font-size:13px;
 	font-family:Fabrica;
-   	width: 364px;
+   	width: 384px;
 	margin-bottom:5px; 
 	position:relative;
 	padding-bottom:5px;
@@ -337,18 +341,30 @@ rect.progress-bk {
 }
 
 .C_bk {
-	stroke : #ED3024;
-	fill : #fff;
-}      
+	fill : #ED3024;
+	stroke : #fff;
+	stroke-width:2;
+}
 
 .C_line {
 	stroke-width : 6;
 	stroke : #ED3024;
-	fill : none;
+	fill : none;	
 }
 
 .C-icon {
 	background: #ED3024;
+}
+
+.C-table li,
+.C-table li .indicator {
+	background: #ED3024;
+}
+
+.C-direction .selected{
+	background:#ED3024;
+	color:#fff;
+	opacity:1;
 }
 
 .H {
