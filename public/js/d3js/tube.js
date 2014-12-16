@@ -441,7 +441,7 @@ define([
 			}
 			var p = obj.path.getPointAtLength(obj.length);
 	        return "translate(" + [p.x, p.y] + ")";
-	    });	
+	    });
 
 		circle.exit().remove();
 		
@@ -488,7 +488,11 @@ define([
 		if(data.line === 'H'){
 			testLineClass = 'H';
 			testLine = 'Hammersmith'; 
-		}
+		} 
+		
+		//Removes the old trains	
+		d3.selectAll('.lines-path circle').remove();
+		d3.selectAll('.lines-path text').remove();
 		
 		var that = this,
 			Line = this.svg.select('#'+testLine+'-path');

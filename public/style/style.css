@@ -564,9 +564,19 @@ rect.progress-bk {
 	fill : #009CDB;
 }
 
+.V.anti {
+	fill : #fff;
+}
+
 .V_bk {
 	fill : #009CDB;
 	stroke : #fff;
+	stroke-width:2;
+}
+
+.V_bk.anti {
+	fill : #fff;
+	stroke : #009CDB;
 	stroke-width:2;
 }
 
