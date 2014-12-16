@@ -2,7 +2,7 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'custom/stationsData',      
+  'data/stationsData',      
   'views/SearchItemView',
   'text!templates/search.html'
 ], function($, _, Backbone, stationsData, SearchItemView, SearchTemplate){

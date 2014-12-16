@@ -2,8 +2,8 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'custom/tube',
-  'custom/stationsData',	
+  'd3js/tube',
+  'data/stationsData',	
   'models/Station',
   'views/BaseView',
   'views/TubeView' 
@@ -17,7 +17,6 @@ define([
 			this.tube = new Tube();
 			this.state = new Backbone.Model({});
 			this.model = new Station();
-			this.controllerModelFetchInterval(this.state)
 		},
 		
 		render : function(){
@@ -41,13 +40,6 @@ define([
 
 			this.$el.find('#table').remove();
 
-
-		},
-		
-		controllerModelFetchInterval : function(state,interval){
-			this.model.set('code','oxc'); 
-			this.model.set('line','c'); 
-			this.model.fetch();
 		}
 		  
 	});

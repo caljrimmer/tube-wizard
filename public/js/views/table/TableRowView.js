@@ -4,7 +4,7 @@ define([
   'backbone',
   'countdown',
   'text!templates/table/table-row.html',
-  'custom/charts'
+  'd3js/charts'
 ], function($, _, Backbone, Countdown, TableRowTemplate, Charts){
 	
     var TableRowView = Backbone.View.extend({

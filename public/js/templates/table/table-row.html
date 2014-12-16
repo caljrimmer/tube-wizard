@@ -1,4 +1,4 @@
 <div class="radial"></div>
-<div class="location">&gt; <%= Destination%><br/><span><%=Location %></span></div>
+<div class="location"><span class="limit">&gt; <%= Location.replace('Between','')%></span><br/><span>Going to <%=Destination %></span></div>
 <div class="time"><%if(SecondsTo < 61){%><%= SecondsTo %><%}else{%> <%= TimeTo %> <%}%></div>
 <div class="progress"></div>  

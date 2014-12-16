@@ -4,12 +4,13 @@ define([
 	'backbone', 
 	'registry', 
 	'd3', 
-	'custom/linesData',
-	'custom/stationsData'
+	'data/linesData',
+	'data/stationsData',
+	'data/routesData' 
 	], 
-	function($, _, Backbone, Registry, d3, linesData, stationsData) {
+	function($, _, Backbone, Registry, d3, linesData, stationsData,routesData) {
 
-	function Tube() {
+	function Tube() { 
 		this.trainArray = [];
 		this.killMe = {};
 	}
@@ -234,24 +235,54 @@ define([
 
 			});
 
-		});
-        
-        /*
-		var assetOverlay = svg.append("image")
-			.attr("xlink:href", "images/map.png")
-			.attr("width", 2422)
-			.attr("height", 1620)
-			.attr("transform","translate(38,22)");   
-
-		this.svg.on('click',function(){
-			console.log(d3.mouse(this));
-		});
-		*/
+		}); 
 		
+		//Only used when constructing new lines
+		this.construct.map(svg);
+
 		// Tracking of Trains SVG all Lines. Invisible to user.
 		this.drawInvisibleRails(paths,svg);
 		
+	}; 
+	
+	Tube.prototype.construct = {
+		
+		building : false,
+		
+		map : function(svg){ 
+			if(this.building){
+				var assetOverlay = svg.append("image")
+					.attr("xlink:href", "images/map.png")
+					.attr("width", 2422)
+					.attr("height", 1620)
+					.attr("transform","translate(38,22)");   
+
+				svg.on('click',function(){
+					console.log(d3.mouse(this));
+				}); 
+			}
+		},
+		
+		trains : function(Line,testLineClass){
+			if(this.building){
+				var trainBlob = Line.append("circle")
+				    .attr({
+					    r: 10,
+					    class : testLineClass,
+					    transform: function () {
+					        var p = Line.selectAll('path')[0][1].getPointAtLength(2462)
+					        return "translate(" + [p.x, p.y] + ")";
+					    }  
+					})
+					.style('stroke','#fff')
+					.style('stroke-width',2);
+				console.log(Line.selectAll('path')[0][1].getTotalLength());    
+			}
+		}
+		
 	}
+	
+	
 	
 	Tube.prototype.parseVerbose = function(stationsData,testLine,trainData){
 		
@@ -303,15 +334,6 @@ define([
 
 	}
 	
-	Tube.prototype.trainsAnimate = function(startLength,stopLength,secondsTo,secondsToCount,path){
-		if(secondsToCount === secondsTo){
-			clearInterval(this.killMe);
-		}
-		var length = Math.floor((((stopLength - startLength) / secondsTo) * secondsToCount) + startLength);   	
-		var p = path.getPointAtLength(length);
-		return "translate(" + [p.x, p.y] + ")";  
-	}
-	
 	Tube.prototype.findLength = function(where,to,line){
 		var startLength,
 			indexes,
@@ -357,18 +379,7 @@ define([
 				to : 0
 			};
 			
-		var routes = {
-			District : [
-			/*EBY->UPM*/['EBY','ECM','ACT','CHP','TGR','STB','RCP','HMD','BCT','WKN'],
-			/*RMD->UPM*/['RMD','KEW','GUN'],
-			/*WDN->UPM*/['WDN','WMP','SFS','EPY','PUT','PGR','FBY','WBT'],
-			/*WDN->ERD*/['HST','NHG','BAY','PAD','ERD']
-			],
-			Central : [
-			/*WRP->EPP*/['WRP','RUG','SRP','NHT','GFD','PER','HLN','SNB','SWF','WFD','BHL','LTN','DEB','THB','EPP'],
-			/*EBY->WFD*/['EBY','WAC','WAN','RED','GHL','NEP','BDE','FLP','HAI','GRH','CHG','ROD']
-			] 
-		}
+		var routes = routesData;
 		
 		_.each(routes[line],function(v,k){
 			_.each(v,function(station){
@@ -380,6 +391,89 @@ define([
 		return index;
 
 	}
+	
+	Tube.prototype.trainsAnimate = function(startLength,stopLength,secondsTo,secondsToCount,path){
+		if(secondsToCount === secondsTo){
+			clearInterval(this.killMe);
+		}
+		var length = Math.floor((((stopLength - startLength) / secondsTo) * secondsToCount) + startLength);   	
+		var p = path.getPointAtLength(length);
+		return "translate(" + [p.x, p.y] + ")";  
+	}
+	
+	Tube.prototype.calculateLength = function(data,testLine,Line,d){
+		var where = this.parseVerbose(stationsData,testLine,d),
+			pathObj =  this.findRoute(where,data.id,testLine),
+			pathIndex = this.findPathIndex(pathObj),
+			startLength = this.findLength(where,data.id,testLine),
+			stopLength = _.findWhere(stationsData[testLine],{code:data.id}).atLength[pathIndex],
+			path = Line.selectAll('path')[0][pathIndex]; 
+			if(parseInt(d.SecondsTo,10) === 0){
+				return {
+					length : 0,
+					path : 0
+				} 
+			}
+			length = Math.floor((((stopLength - startLength) / parseInt(d.OrgSecondsTo,10)) * parseInt(d.OrgSecondsTo - d.SecondsTo,10)) + startLength);
+			return {
+				length : length,
+				path : path
+			}  
+	} 
+	
+	Tube.prototype.trainsCircle = function(data,testLine,testLineClass,Line){
+		
+		var that = this; 
+		
+		var circle = Line.selectAll("circle")
+		    .data(data.trains);
+                                
+		circle.enter().append("circle")
+			.attr('r',10)
+			.attr('class',testLineClass)
+			.style('stroke','#fff')
+			.style('stroke-width',2)
+			
+		circle.attr('transform',function (d,i) {
+	        var obj = that.calculateLength(data,testLine,Line,d);
+	   		if(obj.length === 0){
+		    	return "translate(" + [0, 0] + ")";
+			}
+			var p = obj.path.getPointAtLength(obj.length);
+	        return "translate(" + [p.x, p.y] + ")";
+	    });	
+
+		circle.exit().remove();
+		
+	};
+	
+	Tube.prototype.trainsText = function(data,testLine,Line){
+		
+		var that = this;
+		
+		var label = Line.selectAll("text")
+		    .data(data.trains);
+
+		label.enter().append("text")
+			.attr("dy",".35em")
+			.attr("text-anchor","middle")
+			.attr('class', 'tube-number')
+			.text(function(d){
+				return d.index;
+			});
+			
+		label.attr('transform',function (d,i) {
+	        var obj = that.calculateLength(data,testLine,Line,d);
+	   		if(obj.length === 0){
+		    	return "translate(" + [0, 0] + ")";
+			}   	
+			var p = obj.path.getPointAtLength(obj.length);
+	        return "translate(" + [p.x, p.y] + ")";
+	    });  
+
+		label.exit().remove();
+		
+	};
 	
 	Tube.prototype.trains = function(data){
 		
@@ -398,79 +492,13 @@ define([
 		
 		var that = this,
 			Line = this.svg.select('#'+testLine+'-path');
-		
-		//Removes the old trains	
-		d3.selectAll('.lines-path circle').remove();
-		d3.selectAll('.lines-path text').remove();
-        
-        /*
-		var trainBlob = Line.append("circle")
-		    .attr({
-			    r: 10,
-			    class : testLineClass,
-			    transform: function () {
-			        var p = Line.selectAll('path')[0][1].getPointAtLength(2462)
-			        return "translate(" + [p.x, p.y] + ")";
-			    }  
-			})
-			.style('stroke','#fff')
-			.style('stroke-width',2);
-		
-		console.log(Line.selectAll('path')[0][1].getTotalLength())
-		*/
-
-
-		_.each(data.trains,function(v,k){
-			
-				var where = that.parseVerbose(stationsData,testLine,v),
-					pathObj =  that.findRoute(where,data.id,testLine),
-					pathIndex = that.findPathIndex(pathObj),
-					startLength = that.findLength(where,data.id,testLine),
-					stopLength = _.findWhere(stationsData[testLine],{code:data.id}).atLength[pathIndex],
-					direction = v.Direction,
-					path; 
-				
-				v.SecondsTo = parseInt(v.SecondsTo,10);
-				v.SecondsToCount = 0; 
-
-				if(startLength && v.SecondsTo < 2000){    
-				
-					path = Line.selectAll('path')[0][pathIndex];
-					
-					var train = Line.append("circle")
-					    .attr({
-						    r: 10,
-						    class : testLineClass,
-						    transform: function () {
-						        var p = path.getPointAtLength(startLength)
-						        return "translate(" + [p.x, p.y] + ")";
-						    }  
-						})
-						.style('stroke','#fff')
-						.style('stroke-width',2)
-				
-					var trainNumber = Line.append("text")
-						.attr("dy",".35em")
-						.attr("text-anchor","middle")
-						.attr('class', 'tube-number')
-						.attr('transform',function () {
-					        var p = path.getPointAtLength(startLength)
-					        return "translate(" + [p.x, p.y] + ")";
-					    })  
-						.text(v.index);
-				    
-					if(v.positionAdjust !== -1){
-						this.killMe = setInterval(function(){
-							v.SecondsToCount = v.SecondsToCount + 1;
-							var position = that.trainsAnimate(startLength,stopLength,v.SecondsTo,v.SecondsToCount,path);
-							train.attr('transform',position);
-							trainNumber.attr('transform',position);
-						},1000);
-					}   
-				
-				}    
-
-		});        
+		       
+		//Only used when constructing new lines
+		this.construct.trains(Line,testLineClass);
+		   
+		//Enter + Update
+		this.trainsCircle(data,testLine,testLineClass,Line);
+		this.trainsText(data,testLine,Line);
 
 	}
 

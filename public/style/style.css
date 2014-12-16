@@ -174,7 +174,7 @@ and (max-device-width : 480px){
 
 #table {
 	width:384px;
-	height:calc(100% - 380px);
+	height:30%;
 	position: absolute;
 	background: rgba(0, 0, 0, 0.7);
 	padding: 5px 5px 0 5px;
@@ -257,15 +257,27 @@ and (max-device-width : 480px){
 }
 
 .tube-lines li .location {
-	width:250px;
+	width:270px;
 	float:left;
 	margin:5px;
-	font-size:14px;
+	font-size:13px;
 	font-weight:bold;
 	line-height:17px;
 	color:#fff;       
 	height:34px;
 	overflow: hidden;
+}
+
+.tube-lines li .location .limit {
+	font-size:13px; 
+	width:250px; 
+	height:13px;
+	font-weight:bold;
+	opacity:1;
+	display:inline-block;
+	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
 }
 
 .tube-lines li .location span {

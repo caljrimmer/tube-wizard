@@ -2,8 +2,8 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'custom/tube',
-  'custom/stationsData',	
+  'd3js/tube',
+  'data/stationsData',	
   'models/Station',
   'views/BaseView',
   'views/table/TableView',
@@ -16,6 +16,8 @@ define([
 		el : $('#canvas'),
 		
 		initialize : function(){ 
+			var that = this;
+			this.t = {};
 			this.tube = new Tube();
 			this.model = new Station();
 			if(_.has(window.localStorage,'tw-state')){
@@ -26,7 +28,12 @@ define([
 				this.state.set({line:'V'});
 			}
 			this.state.bind('change',this.controllerNewSelect,this);
-			this.controllerModelFetchInterval(this.state); 
+			this.controllerModelFetchInterval(this.state);
+			
+			$(window).bind('resize',_.debounce(function(){
+				that.controllerModelFetchInterval(that.state);
+				that.render();
+			},500))
 		},
 		
 		render : function(types){
@@ -66,11 +73,10 @@ define([
 			this.model.set('code',code);
 			this.model.set('line',line);
 			this.model.fetch();  
-				
-			var t = setInterval(function(){
+			clearInterval(this.t);	
+			this.t = setInterval(function(){
 				that.model.fetch();
-			},60000);
-			
+			},30000);
 		},
 		
 		afterRender : function(){
