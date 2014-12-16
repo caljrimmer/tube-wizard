@@ -38,8 +38,9 @@ define([
 			this.$el.find('#map-viewport').css({
 				height:'1655px'
 			});
-			
+
 			this.$el.find('#table').remove();
+
 
 		},
 		

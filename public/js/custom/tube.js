@@ -11,6 +11,7 @@ define([
 
 	function Tube() {
 		this.trainArray = [];
+		this.killMe = {};
 	}
 	
 	Tube.prototype.drawLines = function(paths,svg){
@@ -245,8 +246,8 @@ define([
 		this.svg.on('click',function(){
 			console.log(d3.mouse(this));
 		});
-        */
-        
+		*/
+		
 		// Tracking of Trains SVG all Lines. Invisible to user.
 		this.drawInvisibleRails(paths,svg);
 		
@@ -295,7 +296,6 @@ define([
 		}); 
 		
 		if(!where.length) {
-			console.log(location);  
 			return null;
 		}
 		
@@ -303,9 +303,9 @@ define([
 
 	}
 	
-	Tube.prototype.trainsAnimate = function(startLength,stopLength,secondsTo,secondsToCount,path,killMe){
+	Tube.prototype.trainsAnimate = function(startLength,stopLength,secondsTo,secondsToCount,path){
 		if(secondsToCount === secondsTo){
-			clearInterval(killMe);
+			clearInterval(this.killMe);
 		}
 		var length = Math.floor((((stopLength - startLength) / secondsTo) * secondsToCount) + startLength);   	
 		var p = path.getPointAtLength(length);
@@ -363,8 +363,11 @@ define([
 			/*RMD->UPM*/['RMD','KEW','GUN'],
 			/*WDN->UPM*/['WDN','WMP','SFS','EPY','PUT','PGR','FBY','WBT'],
 			/*WDN->ERD*/['HST','NHG','BAY','PAD','ERD']
-			]
-
+			],
+			Central : [
+			/*WRP->EPP*/['WRP','RUG','SRP','NHT','GFD','PER','HLN','SNB','SWF','WFD','BHL','LTN','DEB','THB','EPP'],
+			/*EBY->WFD*/['EBY','WAC','WAN','RED','GHL','NEP','BDE','FLP','HAI','GRH','CHG','ROD']
+			] 
 		}
 		
 		_.each(routes[line],function(v,k){
@@ -380,7 +383,7 @@ define([
 	
 	Tube.prototype.trains = function(data){
 		
-		//var testLine = 'District';
+		//var testLine = 'Central';
 		var testLine = data.info.lineName.split(' ')[0].replace(',','');
 		var testLineClass = testLine.charAt(0);
 		
@@ -400,21 +403,22 @@ define([
 		d3.selectAll('.lines-path circle').remove();
 		d3.selectAll('.lines-path text').remove();
         
-		/*
+        /*
 		var trainBlob = Line.append("circle")
 		    .attr({
 			    r: 10,
 			    class : testLineClass,
 			    transform: function () {
-			        var p = Line.selectAll('path')[0][0].getPointAtLength(2280)
+			        var p = Line.selectAll('path')[0][1].getPointAtLength(2462)
 			        return "translate(" + [p.x, p.y] + ")";
 			    }  
 			})
 			.style('stroke','#fff')
 			.style('stroke-width',2);
 		
-		console.log(Line.selectAll('path')[0][0].getTotalLength())
+		console.log(Line.selectAll('path')[0][1].getTotalLength())
 		*/
+
 
 		_.each(data.trains,function(v,k){
 			
@@ -456,9 +460,9 @@ define([
 						.text(v.index);
 				    
 					if(v.positionAdjust !== -1){
-						var killMe = setInterval(function(){
+						this.killMe = setInterval(function(){
 							v.SecondsToCount = v.SecondsToCount + 1;
-							var position = that.trainsAnimate(startLength,stopLength,v.SecondsTo,v.SecondsToCount,path,killMe);
+							var position = that.trainsAnimate(startLength,stopLength,v.SecondsTo,v.SecondsToCount,path);
 							train.attr('transform',position);
 							trainNumber.attr('transform',position);
 						},1000);
