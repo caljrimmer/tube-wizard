@@ -1,0 +1,19 @@
+{
+  "name": "TubeWizard",
+  "version": "0.1.0",
+  "description": "Real-time tube train map with actual moving trains",
+  "main": "api/app.js",
+  "dependencies": {
+	"express": "*",
+	"mongoose" : "*",
+	"body-parser": "*",
+	"errorhandler": "*",
+	"method-override": "*",
+	"cookie-parser" : "*",
+	"request": "*",
+	"underscore": "*",
+	"xml2js":"*"
+  },
+  "devDependencies": {},
+  "author": "Callum Rimmer<callum@deadtrendy.co.uk> (http://www.deadtrendy.co.uk)"
+}

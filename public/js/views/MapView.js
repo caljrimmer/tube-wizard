@@ -16,44 +16,37 @@ define([
 		initialize : function(){
 			this.tube = new Tube();
 			this.state = new Backbone.Model({});
-			this.model = new Station({id:'OXC'});
+			this.model = new Station();
 			this.controllerModelFetchInterval(this.state)
 		},
 		
 		render : function(){
 
 			this.tubeView = new TubeView({
-				el : $(this.el).find('#map-viewport'),
+				el : this.$el.find('#map-viewport'),
 				model : this.model,
 				state : this.state
 			});
 			
 			this.tubeView.render();          
 			
-			$(this.el).css({
+			this.$el.css({
 				width:'2500px',
 				height:'1655px'
 			});
 			
-			$(this.el).find('#map-viewport').css({
+			this.$el.find('#map-viewport').css({
 				height:'1655px'
 			});
+			
+			this.$el.find('#table').remove();
 
 		},
 		
 		controllerModelFetchInterval : function(state,interval){
-			var that = this;
-			this.model.fetch(
-				{data: {
-					id: 'oxc',
-					line : 'c'
-				}, 
-				type: 'POST'}
-			);
-		},
-		                    
-		controllerNewSelect : function(state){
-			this.controllerModelFetchInterval(state)
+			this.model.set('code','oxc'); 
+			this.model.set('line','c'); 
+			this.model.fetch();
 		}
 		  
 	});

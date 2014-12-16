@@ -5,9 +5,12 @@ define([
   'registry'
 ], function($, _, Backbone, registry){
 		
-	var Station = Backbone.Model.extend({ 
-		urlRoot : 'http://localhost:4001/api/station/'
-		//urlRoot : 'http://www.pencyl.com/api/station/'
+	var Station = Backbone.Model.extend({
+		urlRoot : 'api/station/',
+		url : function(method, model, options) {
+			return this.urlRoot + this.get('line') + '/' + this.get('code');
+		}
+
 	});
 
 	return Station; 

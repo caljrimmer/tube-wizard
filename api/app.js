@@ -1,47 +1,34 @@
-//Required Modules
 var express = require('express');
-var app = express();
-var stations = require('./controllers/stations.js');
-var http = require('http');
-var request = require('request');
-var xml2js = require('xml2js');
-var _ = require('underscore');
+var methodOverride = require('method-override');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var errorhandler = require('errorhandler');
+var app = express(); 
+var stations = require('./controllers/stations.js')
 
-// Configuration
+// all environments
+app.set('port', process.env.PORT || 7001);
+app.use(methodOverride());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(errorhandler());   
 
-app.configure(function(){
-  app.set('views', __dirname + '/../public/');
-  app.set('view engine', 'ejs');
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(express.cookieParser());
-  app.use(express.session(
-	{ secret: 'SpecialObsfication', 
-	  cookie: {maxAge: 60000 * 60 * 24 * 30} //30 Days
-	}
-  ));
-  app.use(app.router); 
-  app.use(express.static(__dirname + '/../public'));
-});
-
-app.configure('test', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
-
-app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
-
-app.configure('production', function(){
-  app.use(express.errorHandler());
-});
-
-app.post('/api/station/:code', function(req, res){
+app.get('/api/station/:line/:code', function(req, res){
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "X-Requested-With");
 	stations.getStation(req, res);
+});
+ 
+/**
+* Render the index internal to the node app.
+*/
+
+app.use(express.static('./public'));
+app.get('/', function(req, res){
+	res.render('index.html');
+	res.end();
 }); 
 
-var server = http.createServer(app).listen(4001, function(){
-  console.log('Express server listening on port 4001');
+app.listen(app.get('port'), function(){
+	console.log('Express server now listening on port ' + app.get('port'));
 });

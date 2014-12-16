@@ -12,49 +12,43 @@ define([
 	function Tube() {
 		this.trainArray = [];
 	}
-
-	Tube.prototype.map = function(target) {
-
-		$(target).empty();
-
-		var w = $(target).width(),
-			h = $(target).height(),
-			t = target[0],
-			paths = linesData,
-			stationsMap = stationsData;
-
-		var svg = d3.select(t).append("svg")
-			.attr("width", w)
-			.attr("height", h);
-			
-		this.svg = svg;
-        
-		// Visual SVG all Lines. Not the routes just the aesthetics.
-		var allLines = function(){
-			
-			_.each(paths,function(v,k){
-				
-				var Line = svg.append("g")
-			      .attr("id", k)
-			      .attr("class","lines")
-				  .attr("transform","translate("+ v.x +","+ v.y +")");
-
-				_.each(v.data,function(path){
-					Line.append("svg:path")
-						.attr("d", path.d)
-						.attr("class",v.class + "_line");
-				});
-
+	
+	Tube.prototype.drawLines = function(paths,svg){
+		_.each(paths,function(v,k){
+			var Line = svg.append("g")
+		      .attr("id", k)
+		      .attr("class","lines")
+			  .attr("transform","translate("+ v.x +","+ v.y +")");
+			_.each(v.data,function(path){
+				Line.append("svg:path")
+					.attr("d", path.d)
+					.attr("class",v.class + "_line");
 			});
-			  
-		}();
-		
-		//Adds stations and station codes to SVG
-		var StationsMap = svg.append("g")
+		});
+	};
+	
+	Tube.prototype.drawInvisibleRails = function(paths,svg){
+		_.each(paths,function(v,k){
+			var Line = svg.append("g")
+		      .attr("id", k + "-path")
+		      .attr("class","lines-path")
+			  .attr("transform","translate("+ v.x +","+ v.y +")");
+			_.each(v.data,function(path,i){
+				Line.append("svg:path")
+					.attr("d", path.d)
+					.attr("class",v.class + "_line_"+i);
+			});
+		});
+	};
+	
+	Tube.prototype.drawStationContainer = function(svg){
+		return svg.append("g")
 	      .attr("id", "StationsMap")
 		  .attr("transform","translate(0,0)");
-		
-		var textPos = {
+	};
+	
+	Tube.prototype.labelPosition = function(){
+		return {
 			circle: {
 				N: {
 					text: {
@@ -139,8 +133,35 @@ define([
 					}
 				}
 			}
-		}
+		}; 
+	};
+
+	Tube.prototype.map = function(target) {
+
+		$(target).empty();
+
+		var w = $(target).width(),
+			h = $(target).height(),
+			t = target[0],
+			paths = linesData,
+			stationsMap = stationsData;
+
+		var svg = d3.select(t).append("svg")
+			.attr("width", w)
+			.attr("height", h);
+			
+		this.svg = svg;
+        
+		// Visual SVG all Lines. Not the routes just the aesthetics.
+		this.drawLines(paths,svg);
 		
+		//Adds stations container
+		var StationsMap = this.drawStationContainer(svg);
+		
+		//Moves the tube code name around the stations
+		var textPos = this.labelPosition();
+		
+		//Position all the stations on the map
 		_.each(stationsMap,function(v,k){
 			
 			var lineClass = k.charAt(0);
@@ -171,8 +192,7 @@ define([
 						.style("stroke-width",3)
 						.style("opacity",0.6);  
 				}else{
-					                                                            
-					
+
 					if(item.position.text === 'W' || item.position.text === 'E'){
 						rectDimensions = {x:10,y:6};
 					}else{
@@ -211,7 +231,6 @@ define([
 						.text(item.code);   
 				}
 
-				
 			});
 
 		});
@@ -227,28 +246,10 @@ define([
 			console.log(d3.mouse(this));
 		});
         */
+        
+		// Tracking of Trains SVG all Lines. Invisible to user.
+		this.drawInvisibleRails(paths,svg);
 		
-		// Tracking of Trains SVG all Lines. Inivisble to user.
-		var allPathLines = function(){
-
-			_.each(paths,function(v,k){
-
-				var Line = svg.append("g")
-			      .attr("id", k + "-path")
-			      .attr("class","lines-path")
-				  .attr("transform","translate("+ v.x +","+ v.y +")");
-
-				_.each(v.data,function(path,i){
-					Line.append("svg:path")
-						.attr("d", path.d)
-						.attr("class",v.class + "_line_"+i);
-				});
-
-			});
-
-		}();
-			      
-
 	}
 	
 	Tube.prototype.parseVerbose = function(stationsData,testLine,trainData){

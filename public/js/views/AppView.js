@@ -15,16 +15,18 @@ define([
 	
 		el : $('#canvas'),
 		
-		initialize : function(){
+		initialize : function(){ 
 			this.tube = new Tube();
+			this.model = new Station();
 			if(_.has(window.localStorage,'tw-state')){
 				this.state = new Backbone.Model(JSON.parse(window.localStorage.getItem('tw-state')))
 			}else{
+				//Sets Oxford Street as default
 				this.state = new Backbone.Model(stationsData.Bakerloo[14]);
 				this.state.set({line:'V'});
 			}
-			this.state.bind('change',this.controllerNewSelect,this); 
-			this.controllerModelFetchInterval(this.state);
+			this.state.bind('change',this.controllerNewSelect,this);
+			this.controllerModelFetchInterval(this.state); 
 		},
 		
 		render : function(types){
@@ -53,32 +55,20 @@ define([
 		
 		controllerModelFetchInterval : function(state,interval){
 			var that = this,
-				line = state.get('line');
-				
-			if(!this.model){
-				this.model = new Station({id:this.state.get('code')});
-			}
+				line = state.get('line'),
+				code = state.get('code');
 			
+			//If circle line then we need to send new code for backend
 			if(line === "Ci"){
 				line = "h";
 			};      
-
-			this.model.fetch(
-				{data: {
-					id: state.get('code'),
-					line : line
-				}, 
-				type: 'POST'}
-				);
+            
+			this.model.set('code',code);
+			this.model.set('line',line);
+			this.model.fetch();  
 				
 			var t = setInterval(function(){
-				that.model.fetch(
-					{data: {
-						id: state.get('code'),
-						line : line
-					}, 
-					type: 'POST'}
-				);
+				that.model.fetch();
 			},60000);
 			
 		},
