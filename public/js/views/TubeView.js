@@ -18,7 +18,7 @@ define([
 		},
 		
 		render : function(types){
-			this.tube.map($(this.el).find('#map')); 
+			this.tube.drawMap($(this.el).find('#map')); 
 			this.renderStationsOn();
 			this.draggable = new Draggable(this.$el.find('#map')[0]);
 			this.renderMapShift(this.state); 

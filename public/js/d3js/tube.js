@@ -1,44 +1,47 @@
 define([
-	'jquery', 
-	'underscore', 
-	'backbone', 
-	'registry', 
 	'd3', 
 	'data/linesData',
 	'data/stationsData',
-	'data/routesData' 
+	'data/routesData',
+	'data/labelData', 
 	], 
-	function($, _, Backbone, Registry, d3, linesData, stationsData,routesData) {
+	function(d3, linesData, stationsData,routesData,labelData) {
 
-	function Tube() { 
-		this.trainArray = [];
-		this.killMe = {};
+	function Tube() {
+		this.linesData = linesData;
+		this.stationsData = stationsData;
+		this.routesData = routesData;
+		this.labelData = labelData;
+		this.isBuilding = false;
+		this.currentLine = '';
 	}
 	
 	Tube.prototype.drawLines = function(paths,svg){
-		_.each(paths,function(v,k){
+		var props = Object.getOwnPropertyNames(paths);
+		props.forEach(function(prop,i){
 			var Line = svg.append("g")
-		      .attr("id", k)
+		      .attr("id", i)
 		      .attr("class","lines")
-			  .attr("transform","translate("+ v.x +","+ v.y +")");
-			_.each(v.data,function(path){
+			  .attr("transform","translate("+ paths[prop].x +","+ paths[prop].y +")");
+			paths[prop].data.forEach(function(p,i){
 				Line.append("svg:path")
-					.attr("d", path.d)
-					.attr("class",v.class + "_line");
+					.attr("d", p.d)
+					.attr("class",paths[prop].class + "_line");
 			});
 		});
 	};
 	
 	Tube.prototype.drawInvisibleRails = function(paths,svg){
-		_.each(paths,function(v,k){
+		var props = Object.getOwnPropertyNames(paths);
+		props.forEach(function(prop,i){
 			var Line = svg.append("g")
-		      .attr("id", k + "-path")
+		      .attr("id", prop + "-path")
 		      .attr("class","lines-path")
-			  .attr("transform","translate("+ v.x +","+ v.y +")");
-			_.each(v.data,function(path,i){
+			  .attr("transform","translate("+ paths[prop].x +","+ paths[prop].y +")");
+			paths[prop].data.forEach(function(p,i){
 				Line.append("svg:path")
-					.attr("d", path.d)
-					.attr("class",v.class + "_line_"+i);
+					.attr("d", p.d)
+					.attr("class",paths[prop].class + "_line_"+i);
 			});
 		});
 	};
@@ -48,105 +51,17 @@ define([
 	      .attr("id", "StationsMap")
 		  .attr("transform","translate(0,0)");
 	};
-	
-	Tube.prototype.labelPosition = function(){
-		return {
-			circle: {
-				N: {
-					text: {
-						top: -18,
-						left: -8
-					},
-					label: {
-						top: -30,
-						left: -15
-					}
-				},
-				S: {
-					text: {
-						top: 26,
-						left: -10
-					},
-					label: {
-						top: 14,
-						left: -18
-					}
-				},
-				W: {
-					text: {
-						top: 4,
-						left: -44
-					},
-					label: {
-						top: -8,
-						left: -50
-					}
-				},
-				E: {
-					text: {
-						top: 4,
-						left: 22
-					},
-					label: {
-						top: -8,
-						left: 15
-					}
-				}
-			},
-			rect: {
-				N: {
-					text: {
-						top: -18,
-						left: -8
-					},
-					label: {
-						top: -30,
-						left: -15
-					}
-				},
-				S: {
-					text: {
-						top: 26,
-						left: -10
-					},
-					label: {
-						top: 14,
-						left: -18
-					}
-				},
-				W: {
-					text: {
-						top: 4,
-						left: -44
-					},
-					label: {
-						top: -8,
-						left: -50
-					}
-				},
-				E: {
-					text: {
-						top: 4,
-						left: 22
-					},
-					label: {
-						top: -8,
-						left: 15
-					}
-				}
-			}
-		}; 
-	};
 
-	Tube.prototype.map = function(target) {
+	Tube.prototype.drawMap = function(target) {
+              
+		target = target[0];
+		target.innerHTML = null;  
 
-		$(target).empty();
-
-		var w = $(target).width(),
-			h = $(target).height(),
-			t = target[0],
-			paths = linesData,
-			stationsMap = stationsData;
+		var w = target.getBoundingClientRect().width,
+			h = target.getBoundingClientRect().height,
+			t = target,
+			paths = this.linesData,
+			stationsMap = this.stationsData;
 
 		var svg = d3.select(t).append("svg")
 			.attr("width", w)
@@ -161,19 +76,22 @@ define([
 		var StationsMap = this.drawStationContainer(svg);
 		
 		//Moves the tube code name around the stations
-		var textPos = this.labelPosition();
-		
-		//Position all the stations on the map
-		_.each(stationsMap,function(v,k){
+		var textPos = labelData;                  
+		                     
+		var stations = Object.getOwnPropertyNames(stationsMap);
+		stations.forEach(function(station,i){
+			
+			var k = station,
+				v = stationsMap[station];
 			
 			var lineClass = k.charAt(0);
 				
 			if(k === "Circle"){
 				lineClass = 'Ci';
-			}                             
+			}                        
 			
-			_.each(v,function(item){
-				
+			v.forEach(function(item,i){
+
 				var mappedValues,
 					rectDimensions,
 					offset = {x:0,y:0};
@@ -238,19 +156,19 @@ define([
 		}); 
 		
 		//Only used when constructing new lines
-		this.construct.map(svg);
+		this.construct().map(svg);
 
 		// Tracking of Trains SVG all Lines. Invisible to user.
 		this.drawInvisibleRails(paths,svg);
 		
 	}; 
 	
-	Tube.prototype.construct = {
+	Tube.prototype.construct = function(){
 		
-		building : false,
-		
-		map : function(svg){ 
-			if(this.building){
+		var isBuilding = this.isBuilding;
+
+		var map = function(svg){ 
+			if(isBuilding){
 				var assetOverlay = svg.append("image")
 					.attr("xlink:href", "images/map.png")
 					.attr("width", 2422)
@@ -261,10 +179,10 @@ define([
 					console.log(d3.mouse(this));
 				}); 
 			}
-		},
+		}
 		
-		trains : function(Line,testLineClass){
-			if(this.building){
+		var trains = function(Line,testLineClass){
+			if(isBuilding){
 				var trainBlob = Line.append("circle")
 				    .attr({
 					    r: 10,
@@ -278,6 +196,11 @@ define([
 					.style('stroke-width',2);
 				console.log(Line.selectAll('path')[0][1].getTotalLength());    
 			}
+		} 
+		
+		return {
+			trains : trains,
+			map : map
 		}
 		
 	}
@@ -286,43 +209,28 @@ define([
 	
 	Tube.prototype.parseVerbose = function(stationsData,testLine,trainData){
 		
-		if(!_.has(trainData,'Location')) trainData.Location = "";
+		if(!trainData.hasOwnProperty('Location')) trainData.Location = "";
 		
 		var location = trainData.Location.replace("'",""),
 			where = [],
 			length,
 			positionAdjust;   
 		
-		_.each(stationsData[testLine],function(v,k){
+		stationsData[testLine].forEach(function(train,i){
 
-			if(location.indexOf(v.name) !== -1){
+			if(location.indexOf(train.name) !== -1){
 				
-				v.positionAdjust = 0;
+				train.positionAdjust = 0;
 				
 				if(location.indexOf('At ') !== -1){
-					v.positionAdjust = -1;
+					train.positionAdjust = -1;
 				}
-				
-				/*
-				if(location.indexOf('Approaching') !== -1){
-					v.positionAdjust = 0;
-				}
-				if(location.indexOf('Left') !== -1){
-					v.positionAdjust = 0;
-				}
-				if(location.indexOf('North of') !== -1){
-					v.positionAdjust = 0;
-				}
-				if(location.indexOf('South of') !== -1){
-					v.positionAdjust = 0;
-				}
-				*/
 				
 				if(location.indexOf('Between') !== -1){
-					v.positionAdjust = 0.5;
+					train.positionAdjust = 0.5;
 				}
 				
-				where.push(v);
+				where.push(train);
 			}
 		}); 
 		
@@ -379,34 +287,27 @@ define([
 				to : 0
 			};
 			
-		var routes = routesData;
-		
-		_.each(routes[line],function(v,k){
-			_.each(v,function(station){
-				if(at === station) index.at = k;
-				if(to === station) index.to = k;
-			});
-		});
-		
+		var routes = this.routesData;
+
+		if(routes[line]){
+			routes[line].forEach(function(route,i){
+				route.forEach(function(station){ 
+					if(at === station) index.at = i;
+					if(to === station) index.to = i;
+				});	
+			});		
+		}
+
 		return index;
 
 	}
 	
-	Tube.prototype.trainsAnimate = function(startLength,stopLength,secondsTo,secondsToCount,path){
-		if(secondsToCount === secondsTo){
-			clearInterval(this.killMe);
-		}
-		var length = Math.floor((((stopLength - startLength) / secondsTo) * secondsToCount) + startLength);   	
-		var p = path.getPointAtLength(length);
-		return "translate(" + [p.x, p.y] + ")";  
-	}
-	
 	Tube.prototype.calculateLength = function(data,testLine,Line,d){
-		var where = this.parseVerbose(stationsData,testLine,d),
+		var where = this.parseVerbose(this.stationsData,testLine,d),
 			pathObj =  this.findRoute(where,data.id,testLine),
 			pathIndex = this.findPathIndex(pathObj),
 			startLength = this.findLength(where,data.id,testLine),
-			stopLength = _.findWhere(stationsData[testLine],{code:data.id}).atLength[pathIndex],
+			stopLength = _.findWhere(this.stationsData[testLine],{code:data.id}).atLength[pathIndex],
 			path = Line.selectAll('path')[0][pathIndex]; 
 			if(parseInt(d.SecondsTo,10) === 0){
 				return {
@@ -434,7 +335,7 @@ define([
 			.style('stroke','#fff')
 			.style('stroke-width',2)
 			
-		circle.attr('transform',function (d,i) {
+		circle.transition().attr('transform',function (d,i) {
 	        var obj = that.calculateLength(data,testLine,Line,d);
 	   		if(obj.length === 0){
 		    	return "translate(" + [0, 0] + ")";
@@ -462,7 +363,7 @@ define([
 				return d.index;
 			});
 			
-		label.attr('transform',function (d,i) {
+		label.transition().attr('transform',function (d,i) {
 	        var obj = that.calculateLength(data,testLine,Line,d);
 	   		if(obj.length === 0){
 		    	return "translate(" + [0, 0] + ")";
@@ -488,17 +389,20 @@ define([
 		if(data.line === 'H'){
 			testLineClass = 'H';
 			testLine = 'Hammersmith'; 
-		} 
+		}
 		
-		//Removes the old trains	
-		d3.selectAll('.lines-path circle').remove();
-		d3.selectAll('.lines-path text').remove();
+		//Removes the old trains if new line selected 
+		if(this.currentLine !== testLineClass || this.currentLine === ''){
+			d3.selectAll('.lines-path circle').remove();
+			d3.selectAll('.lines-path text').remove();
+			this.currentLine = testLineClass;
+		}
 		
 		var that = this,
 			Line = this.svg.select('#'+testLine+'-path');
 		       
 		//Only used when constructing new lines
-		this.construct.trains(Line,testLineClass);
+		this.construct().trains(Line,testLineClass);
 		   
 		//Enter + Update
 		this.trainsCircle(data,testLine,testLineClass,Line);
