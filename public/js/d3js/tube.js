@@ -303,19 +303,20 @@ define([
 	}
 	
 	Tube.prototype.calculateLength = function(data,testLine,Line,d){
+		
 		var where = this.parseVerbose(this.stationsData,testLine,d),
 			pathObj =  this.findRoute(where,data.id,testLine),
 			pathIndex = this.findPathIndex(pathObj),
 			startLength = this.findLength(where,data.id,testLine),
 			stopLength = _.findWhere(this.stationsData[testLine],{code:data.id}).atLength[pathIndex],
-			path = Line.selectAll('path')[0][pathIndex]; 
-			if(parseInt(d.SecondsTo,10) === 0){
-				return {
-					length : 0,
-					path : 0
-				} 
-			}
-			length = Math.floor((((stopLength - startLength) / parseInt(d.OrgSecondsTo,10)) * parseInt(d.OrgSecondsTo - d.SecondsTo,10)) + startLength);
+			path = Line.selectAll('path')[0][pathIndex];
+			
+		var STo = parseInt(d.SecondsTo,10),
+			OSTo = parseInt(d.OrgSecondsTo,10);
+			 
+			if(STo <= 0) STo = 0; 
+			//0.7 helps smaooth out the movement of the trains when the fetch is completed on new TFL data
+			length = Math.floor( (((stopLength - startLength) / OSTo) * ((OSTo - STo) * 0.7)) + startLength );
 			return {
 				length : length,
 				path : path
@@ -337,9 +338,6 @@ define([
 			
 		circle.transition().attr('transform',function (d,i) {
 	        var obj = that.calculateLength(data,testLine,Line,d);
-	   		if(obj.length === 0){
-		    	return "translate(" + [0, 0] + ")";
-			}
 			var p = obj.path.getPointAtLength(obj.length);
 	        return "translate(" + [p.x, p.y] + ")";
 	    });
@@ -364,10 +362,7 @@ define([
 			});
 			
 		label.transition().attr('transform',function (d,i) {
-	        var obj = that.calculateLength(data,testLine,Line,d);
-	   		if(obj.length === 0){
-		    	return "translate(" + [0, 0] + ")";
-			}   	
+	        var obj = that.calculateLength(data,testLine,Line,d);	
 			var p = obj.path.getPointAtLength(obj.length);
 	        return "translate(" + [p.x, p.y] + ")";
 	    });  
