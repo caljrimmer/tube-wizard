@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Real-time tube train map with actual moving trains",
   "main": "api/app.js",
+  "scripts": {
+    "start": "node api/app.js"
+  },
   "dependencies": {
 	"express": "*",
 	"mongoose" : "*",
